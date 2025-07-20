@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geospatial Training Tutorials</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #f5f5f5; }
+        header { background-color: #000; color: #fff; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { margin: 0; font-size: 1.5em; }
+        header .search { flex-grow: 1; margin: 0 20px; }
+        header .search input { width: 100%; padding: 5px; }
+        header a { color: #fff; text-decoration: none; }
+        .main-content { text-align: center; padding: 40px 20px; background-color: #fff; }
+        .main-content h2 { color: #000; font-size: 2.5em; margin-bottom: 10px; }
+        .main-content p { color: #666; font-size: 1.1em; margin-bottom: 20px; }
+        .modules { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; padding: 20px; }
+        .module-card { background-color: #fff; border: 1px solid #ddd; border-radius: 5px; width: 200px; text-align: left; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .module-card a { text-decoration: none; color: #000; font-weight: bold; }
+        .module-card p { color: #666; font-size: 0.9em; margin: 5px 0; }
+        .carousel { display: flex; align-items: center; }
+        .carousel .arrow { font-size: 2em; color: #666; cursor: pointer; }
+        .carousel .cards { display: flex; gap: 20px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Geospatial Training Tutorials</h1>
+        <div class="search">
+            <input type="text" placeholder="Search Geospatial Support">
+        </div>
+        <a href="#">View All Tutorials</a>
+    </header>
+    <div class="main-content">
+        <h2>Master Geospatial Skills for Any Research.</h2>
+        <p>Explore the basics or enhance your expertise with tutorials designed to empower your geospatial projects.</p>
+        <div class="modules">
+            <div class="carousel">
+                <span class="arrow">&lt;</span>
+                <div class="cards">
+                    <div class="module-card">
+                        <a href="https://spatialturn.github.io/DataCollection/">Data Collection</a>
+                        <p>Learn to gather geospatial data effectively.</p>
+                    </div>
+                    <div class="module-card">
+                        <a href="https://spatialturn.github.io/DataAnalysis/">Data Analysis</a>
+                        <p>Understand geospatial data analysis techniques.</p>
+                    </div>
+                    <div class="module-card">
+                        <a href="https://spatialturn.github.io/DataVisualization/">Data Visualization</a>
+                        <p>Visualize data with advanced GIS tools.</p>
+                    </div>
+                </div>
+                <span class="arrow">&gt;</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
