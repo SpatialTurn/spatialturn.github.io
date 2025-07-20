@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geospatial Training Tutorials</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; background-color: #f5f5f5; }
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #f5f5f5; cursor: url('https://www.cursor.cc/cursor/12/12/0/png'), auto; }
         header { background-color: #000; color: #fff; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
         header h1 { margin: 0; font-size: 1.5em; }
         header .search { flex-grow: 1; margin: 0 20px; }
@@ -20,8 +21,10 @@
         .module-card a { text-decoration: none; color: #000; font-weight: bold; }
         .module-card p { color: #666; font-size: 0.9em; margin: 5px 0; }
         .carousel { display: flex; align-items: center; }
-        .carousel .arrow { font-size: 2em; color: #666; cursor: pointer; }
+        .carousel .arrow { font-size: 2em; color: #3498db; cursor: pointer; margin: 0 10px; transition: color 0.3s; }
+        .carousel .arrow:hover { color: #2980b9; }
         .carousel .cards { display: flex; gap: 20px; overflow-x: auto; }
+        #map { height: 400px; width: 100%; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -36,7 +39,7 @@
         <p>Explore the basics or enhance your expertise with tutorials designed to empower your geospatial projects.</p>
         <div class="modules">
             <div class="carousel">
-                <span class="arrow"><</span>
+                <span class="arrow">❮</span>
                 <div class="cards">
                     <div class="module-card">
                         <img src="/pexels-digitalbuggu-167538.jpg" alt="Data Collection">
@@ -44,19 +47,31 @@
                         <p>Learn to gather geospatial data effectively.</p>
                     </div>
                     <div class="module-card">
-                        <img src="https://via.placeholder.com/200x100?text=Data+Analysis" alt="Data Analysis">
+                        <img src="/pexels-goumbik-590022.jpg" alt="Data Analysis">
                         <a href="https://spatialturn.github.io/DataAnalysis/">Data Analysis</a>
                         <p>Understand geospatial data analysis techniques.</p>
                     </div>
                     <div class="module-card">
-                        <img src="https://via.placeholder.com/200x100?text=Data+Visualization" alt="Data Visualization">
+                        <img src="/pexels-googledeepmind-17484970.jpg" alt="Data Visualization">
                         <a href="https://spatialturn.github.io/DataVisualization/">Data Visualization</a>
                         <p>Visualize data with advanced GIS tools.</p>
                     </div>
                 </div>
-                <span class="arrow">></span>
+                <span class="arrow">❯</span>
             </div>
         </div>
+        <div id="map"></div>
     </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([51.505, -0.09], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        L.marker([40.42, -86.92]).addTo(map)
+            .bindPopup('Purdue University')
+            .openPopup();
+    </script>
 </body>
 </html>
