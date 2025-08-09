@@ -17,27 +17,28 @@
         .main-content { text-align: center; padding: 40px 0; background: linear-gradient(135deg, #2a2a2a, #1e1e1e); border-radius: 15px; margin: 20px 0; box-shadow: 0 6px 15px rgba(0,0,0,0.6); }
         .main-content h2 { color: #00aaff; font-family: 'Roboto', sans-serif; font-size: 2.5em; margin-bottom: 20px; text-shadow: 2px 2px 6px rgba(0,0,0,0.8); }
         .main-content p { color: #ccc; font-size: 1.2em; margin-bottom: 30px; line-height: 1.6; max-width: 900px; margin-left: auto; margin-right: auto; }
-        .modules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; padding: 20px 0; max-width: 1400px; margin: 0 auto; }
-        .module-card { background-color: #2e2e2e; border: 2px solid #444; border-radius: 10px; text-align: left; padding: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); transition: transform 0.4s ease, box-shadow 0.4s ease; }
+        .modules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px 0; max-width: 1400px; margin: 0 auto; }
+        .module-card { background-color: #2e2e2e; border: 2px solid #444; border-radius: 8px; text-align: left; padding: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); transition: transform 0.4s ease, box-shadow 0.4s ease; }
         .module-card:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 8px 16px rgba(0,170,255,0.3); }
-        .module-card img { width: 100%; height: auto; border-radius: 8px 8px 0 0; }
-        .module-card a { text-decoration: none; color: #00aaff; font-family: 'Roboto', sans-serif; font-weight: 700; display: block; margin: 10px 0; font-size: 1.1em; }
-        .module-card p { color: #bbb; font-size: 1em; margin: 8px 0; line-height: 1.4; }
-        #map { height: 200px; width: 100%; margin: 20px 0; border: 2px solid #444; border-radius: 10px; overflow: hidden; }
+        .module-card img { width: 100%; height: auto; border-radius: 6px 6px 0 0; }
+        .module-card a { text-decoration: none; color: #00aaff; font-family: 'Roboto', sans-serif; font-weight: 700; display: block; margin: 8px 0; font-size: 1em; }
+        .module-card p { color: #bbb; font-size: 0.9em; margin: 6px 0; line-height: 1.3; }
+        #map { width: 1400px; height: auto; margin: 20px auto 0; border: 2px solid #444; border-radius: 8px; overflow: hidden; }
         footer { background-color: #333; padding: 15px 20px; text-align: center; font-size: 0.9em; color: #aaa; border-top: 1px solid #555; margin-top: 20px; }
         footer a { color: #00aaff; text-decoration: none; }
         footer a:hover { text-decoration: underline; }
         @media (max-width: 1024px) {
             .modules { grid-template-columns: repeat(2, 1fr); max-width: 600px; }
+            #map { width: 600px; }
             .main-content h2 { font-size: 2em; }
             .main-content p { font-size: 1em; }
         }
         @media (max-width: 768px) {
             .modules { grid-template-columns: 1fr; }
+            #map { width: 100%; height: auto; }
             header { padding: 15px 20px; }
             header .search { margin: 0 20px; }
             .main-content { padding: 20px 0; }
-            #map { height: 150px; }
         }
     </style>
 </head>
@@ -52,7 +53,6 @@
         <div class="main-content">
             <h2>Master Geospatial Skills for Any Research.</h2>
             <p>Explore the basics or enhance your expertise with tutorials designed to empower your geospatial projects.</p>
-            <div id="map"></div>
             <div class="modules">
                 <div class="module-card" data-href="https://spatialturn.github.io/DataCollection/" onclick="window.open(this.dataset.href, '_blank');">
                     <img src="/pexels-digitalbuggu-167538.jpg" alt="Data Collection">
@@ -85,6 +85,7 @@
                     <p>Utilizing GIS Tools to Understand Food Availability in an Area.</p>
                 </div>
             </div>
+            <div id="map"></div>
         </div>
         <footer>
             <p>&copy; 2025 Geospatial Training Tutorials. <a href="mailto:support@geospatialtutorials.com">Contact Us</a> | <a href="/privacy">Privacy Policy</a></p>
@@ -102,6 +103,28 @@
                 card.style.display = text.includes(searchTerm) ? 'block' : 'none';
             });
         });
+
+        // Dynamically size map to match modules
+        function resizeMap() {
+            const modules = document.querySelector('.modules');
+            const map = document.getElementById('map');
+            if (modules && map) {
+                const modulesWidth = modules.offsetWidth;
+                map.style.width = `${modulesWidth}px`;
+                const modulesHeight = modules.offsetHeight;
+                map.style.height = `${modulesHeight}px`;
+                map.style.margin = '20px auto';
+
+                // Invalidate Leaflet map size to adjust rendering
+                if (window.map) {
+                    window.map.invalidateSize();
+                }
+            }
+        }
+
+        // Run on load and resize
+        window.addEventListener('load', resizeMap);
+        window.addEventListener('resize', resizeMap);
 
         // Map Initialization
         var map = L.map('map').setView([40.42, -86.92], 13);
