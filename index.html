@@ -8,29 +8,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans&display=swap" rel="stylesheet">
     <style>
         body { margin: 0; font-family: 'Open Sans', sans-serif; background-color: #1a1a1a; color: #e0e0e0; cursor: url('https://www.cursor.cc/cursor/12/12/0/png'), auto; }
-        header { background: linear-gradient(90deg, #333, #444); color: #fff; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #555; }
+        header { background: linear-gradient(90deg, #333, #444); color: #fff; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #555; }
         header h1 { margin: 0; font-family: 'Roboto', sans-serif; font-size: 2em; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
-        header .search { flex-grow: 1; margin: 0 30px; }
+        header .search { flex-grow: 1; margin: 0 40px; }
         header .search input { width: 100%; padding: 10px 15px; background-color: #2a2a2a; color: #e0e0e0; border: 2px solid #555; border-radius: 25px; outline: none; transition: border-color 0.3s, box-shadow 0.3s; font-size: 1em; }
         header .search input:focus { border-color: #00aaff; box-shadow: 0 0 5px #00aaff; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .container { width: 100%; padding: 0 20px; }
         .main-content { text-align: center; padding: 40px 0; background: linear-gradient(135deg, #2a2a2a, #1e1e1e); border-radius: 15px; margin: 20px 0; box-shadow: 0 6px 15px rgba(0,0,0,0.6); }
         .main-content h2 { color: #00aaff; font-family: 'Roboto', sans-serif; font-size: 2.5em; margin-bottom: 20px; text-shadow: 2px 2px 6px rgba(0,0,0,0.8); }
-        .main-content p { color: #ccc; font-size: 1.2em; margin-bottom: 30px; line-height: 1.6; max-width: 800px; margin-left: auto; margin-right: auto; }
-        .modules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; padding: 20px 0; }
+        .main-content p { color: #ccc; font-size: 1.2em; margin-bottom: 30px; line-height: 1.6; max-width: 900px; margin-left: auto; margin-right: auto; }
+        .modules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; padding: 20px 0; max-width: 1400px; margin: 0 auto; }
         .module-card { background-color: #2e2e2e; border: 2px solid #444; border-radius: 10px; text-align: left; padding: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); transition: transform 0.4s ease, box-shadow 0.4s ease; }
         .module-card:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 8px 16px rgba(0,170,255,0.3); }
         .module-card img { width: 100%; height: auto; border-radius: 8px 8px 0 0; }
         .module-card a { text-decoration: none; color: #00aaff; font-family: 'Roboto', sans-serif; font-weight: 700; display: block; margin: 10px 0; font-size: 1.1em; }
         .module-card p { color: #bbb; font-size: 1em; margin: 8px 0; line-height: 1.4; }
-        #map { height: 150px; width: 100%; margin: 20px 0; border: 2px solid #444; border-radius: 10px; overflow: hidden; }
+        #map { height: 200px; width: 100%; margin: 20px 0; border: 2px solid #444; border-radius: 10px; overflow: hidden; }
         footer { background-color: #333; padding: 15px 20px; text-align: center; font-size: 0.9em; color: #aaa; border-top: 1px solid #555; margin-top: 20px; }
         footer a { color: #00aaff; text-decoration: none; }
         footer a:hover { text-decoration: underline; }
-        @media (max-width: 768px) {
-            .modules { grid-template-columns: 1fr; }
+        @media (max-width: 1024px) {
+            .modules { grid-template-columns: repeat(2, 1fr); max-width: 600px; }
             .main-content h2 { font-size: 2em; }
             .main-content p { font-size: 1em; }
+        }
+        @media (max-width: 768px) {
+            .modules { grid-template-columns: 1fr; }
+            header { padding: 15px 20px; }
+            header .search { margin: 0 20px; }
+            .main-content { padding: 20px 0; }
+            #map { height: 150px; }
         }
     </style>
 </head>
