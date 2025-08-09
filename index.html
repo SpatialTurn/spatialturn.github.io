@@ -16,11 +16,11 @@
         .main-content h2 { color: #00aaff; font-size: 2.3em; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.7); }
         .main-content p { color: #bbb; font-size: 1.1em; margin-bottom: 25px; line-height: 1.5; }
         .modules { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; padding: 20px; }
-        .carousel { display: flex; align-items: center; width: 100%; max-width: 440px; } /* Adjusted for 2 cards of 200px + gap */
+        .carousel { display: flex; align-items: center; width: 100%; max-width: 460px; } /* 2 cards (200px each) + 20px gap + 20px padding */
         .carousel .arrow { font-size: 2.2em; color: #3498db; cursor: pointer; margin: 0 15px; transition: color 0.3s, transform 0.3s; }
         .carousel .arrow:hover { color: #2980b9; transform: scale(1.1); }
-        .carousel .cards { display: flex; gap: 20px; overflow: hidden; }
-        .module-card { background-color: #333; border: 1px solid #444; border-radius: 8px; width: 200px; text-align: left; padding: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.4); transition: transform 0.3s, box-shadow 0.3s; }
+        .carousel .cards { display: flex; gap: 20px; transition: transform 0.3s ease; }
+        .module-card { background-color: #333; border: 1px solid #444; border-radius: 8px; width: 200px; text-align: left; padding: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.4); transition: transform 0.3s, box-shadow 0.3s; flex-shrink: 0; }
         .module-card:hover { transform: scale(1.05); box-shadow: 0 6px 12px rgba(0,0,0,0.6); }
         .module-card img { width: 100%; height: auto; border-radius: 5px 5px 0 0; }
         .module-card a { text-decoration: none; color: #00aaff; font-weight: bold; display: block; margin: 8px 0; }
@@ -87,11 +87,13 @@
         let currentIndex = 0;
         const cardWidth = 220; // 200px card + 20px gap
         const visibleCards = 2;
+        const totalCards = cards.children.length;
 
         function updateSlider() {
+            const maxIndex = totalCards - visibleCards;
             cards.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
             prevArrow.style.visibility = currentIndex === 0 ? 'hidden' : 'visible';
-            nextArrow.style.visibility = currentIndex >= cards.children.length - visibleCards ? 'hidden' : 'visible';
+            nextArrow.style.visibility = currentIndex >= maxIndex ? 'hidden' : 'visible';
         }
 
         prevArrow.addEventListener('click', () => {
@@ -102,7 +104,7 @@
         });
 
         nextArrow.addEventListener('click', () => {
-            if (currentIndex < cards.children.length - visibleCards) {
+            if (currentIndex < totalCards - visibleCards) {
                 currentIndex++;
                 updateSlider();
             }
@@ -119,6 +121,9 @@
                 const text = card.querySelector('a').textContent.toLowerCase() + card.querySelector('p').textContent.toLowerCase();
                 card.style.display = text.includes(searchTerm) ? 'block' : 'none';
             });
+            // Reset slider when searching
+            currentIndex = 0;
+            updateSlider();
         });
 
         // Map Initialization
