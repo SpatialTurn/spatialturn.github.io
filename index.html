@@ -15,17 +15,13 @@
         .main-content { text-align: center; padding: 30px 20px; background-color: #2a2a2a; border-radius: 10px; margin: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .main-content h2 { color: #00aaff; font-size: 2.3em; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.7); }
         .main-content p { color: #bbb; font-size: 1.1em; margin-bottom: 25px; line-height: 1.5; }
-        .modules { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; padding: 20px; }
-        .carousel { display: flex; align-items: center; width: 100%; max-width: 460px; } /* 2 cards (200px each) + 20px gap + 20px padding */
-        .carousel .arrow { font-size: 2.2em; color: #3498db; cursor: pointer; margin: 0 15px; transition: color 0.3s, transform 0.3s; }
-        .carousel .arrow:hover { color: #2980b9; transform: scale(1.1); }
-        .carousel .cards { display: flex; gap: 20px; transition: transform 0.3s ease; }
-        .module-card { background-color: #333; border: 1px solid #444; border-radius: 8px; width: 200px; text-align: left; padding: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.4); transition: transform 0.3s, box-shadow 0.3s; flex-shrink: 0; }
+        .modules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px; max-width: 660px; margin: 0 auto; }
+        .module-card { background-color: #333; border: 1px solid #444; border-radius: 8px; text-align: left; padding: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.4); transition: transform 0.3s, box-shadow 0.3s; }
         .module-card:hover { transform: scale(1.05); box-shadow: 0 6px 12px rgba(0,0,0,0.6); }
         .module-card img { width: 100%; height: auto; border-radius: 5px 5px 0 0; }
         .module-card a { text-decoration: none; color: #00aaff; font-weight: bold; display: block; margin: 8px 0; }
         .module-card p { color: #bbb; font-size: 0.95em; margin: 5px 0; line-height: 1.3; }
-        #map { height: 300px; width: 100%; margin-top: 25px; border-radius: 8px; overflow: hidden; }
+        #map { height: 200px; width: 100%; margin-top: 25px; border-radius: 8px; overflow: hidden; }
     </style>
 </head>
 <body>
@@ -39,79 +35,41 @@
         <h2>Master Geospatial Skills for Any Research.</h2>
         <p>Explore the basics or enhance your expertise with tutorials designed to empower your geospatial projects.</p>
         <div class="modules">
-            <div class="carousel">
-                <span class="arrow" id="prevArrow">❮</span>
-                <div class="cards" id="cardContainer">
-                    <div class="module-card" data-href="https://spatialturn.github.io/DataCollection/" onclick="window.open(this.dataset.href, '_blank');">
-                        <img src="/pexels-digitalbuggu-167538.jpg" alt="Data Collection">
-                        <a href="https://spatialturn.github.io/DataCollection/" target="_blank">Data Collection</a>
-                        <p>Learn to gather geospatial data effectively.</p>
-                    </div>
-                    <div class="module-card" data-href="https://spatialturn.github.io/DataAnalysis/" onclick="window.open(this.dataset.href, '_blank');">
-                        <img src="/pexels-goumbik-590022.jpg" alt="Data Analysis">
-                        <a href="https://spatialturn.github.io/DataAnalysis/" target="_blank">Data Analysis</a>
-                        <p>Understand geospatial data analysis techniques.</p>
-                    </div>
-                    <div class="module-card" data-href="https://spatialturn.github.io/DataVisualization/" onclick="window.open(this.dataset.href, '_blank');">
-                        <img src="/pexels-googledeepmind-17484970.jpg" alt="Data Visualization">
-                        <a href="https://spatialturn.github.io/DataVisualization/" target="_blank">Data Visualization</a>
-                        <p>Visualize data with advanced GIS tools.</p>
-                    </div>
-                    <div class="module-card" data-href="https://spatialturn.github.io/DataManagement/" onclick="window.open(this.dataset.href, '_blank');">
-                        <img src="/pexels-cookiecutter-1148820.jpg" alt="Data Management">
-                        <a href="https://spatialturn.github.io/DataManagement/" target="_blank">Data Management</a>
-                        <p>Understand geospatial data management techniques.</p>
-                    </div>
-                    <div class="module-card" data-href="https://spatialturn.github.io/DataCuration/" onclick="window.open(this.dataset.href, '_blank');">
-                        <img src="/pexels-artempodrez-6779716.jpg" alt="Data Curation">
-                        <a href="https://spatialturn.github.io/DataCuration/" target="_blank">Data Curation</a>
-                        <p>Understand geospatial data curation techniques.</p>
-                    </div>
-                    <div class="module-card" data-href="https://spatialturn.github.io/CaseStudyFoodDesert/" onclick="window.open(this.dataset.href, '_blank');">
-                        <img src="/pexels-wendywei-1656663.jpg" alt="Food Desert">
-                        <a href="https://spatialturn.github.io/CaseStudyFoodDesert/" target="_blank">Case Study 1: Food Desert</a>
-                        <p>Utilizing GIS Tools to Under Food Availibility in an Area.</p>
-                    </div>
-                </div>
-                <span class="arrow" id="nextArrow">❯</span>
+            <div class="module-card" data-href="https://spatialturn.github.io/DataCollection/" onclick="window.open(this.dataset.href, '_blank');">
+                <img src="/pexels-digitalbuggu-167538.jpg" alt="Data Collection">
+                <a href="https://spatialturn.github.io/DataCollection/" target="_blank">Data Collection</a>
+                <p>Learn to gather geospatial data effectively.</p>
+            </div>
+            <div class="module-card" data-href="https://spatialturn.github.io/DataAnalysis/" onclick="window.open(this.dataset.href, '_blank');">
+                <img src="/pexels-goumbik-590022.jpg" alt="Data Analysis">
+                <a href="https://spatialturn.github.io/DataAnalysis/" target="_blank">Data Analysis</a>
+                <p>Understand geospatial data analysis techniques.</p>
+            </div>
+            <div class="module-card" data-href="https://spatialturn.github.io/DataVisualization/" onclick="window.open(this.dataset.href, '_blank');">
+                <img src="/pexels-googledeepmind-17484970.jpg" alt="Data Visualization">
+                <a href="https://spatialturn.github.io/DataVisualization/" target="_blank">Data Visualization</a>
+                <p>Visualize data with advanced GIS tools.</p>
+            </div>
+            <div class="module-card" data-href="https://spatialturn.github.io/DataManagement/" onclick="window.open(this.dataset.href, '_blank');">
+                <img src="/pexels-cookiecutter-1148820.jpg" alt="Data Management">
+                <a href="https://spatialturn.github.io/DataManagement/" target="_blank">Data Management</a>
+                <p>Understand geospatial data management techniques.</p>
+            </div>
+            <div class="module-card" data-href="https://spatialturn.github.io/DataCuration/" onclick="window.open(this.dataset.href, '_blank');">
+                <img src="/pexels-artempodrez-6779716.jpg" alt="Data Curation">
+                <a href="https://spatialturn.github.io/DataCuration/" target="_blank">Data Curation</a>
+                <p>Understand geospatial data curation techniques.</p>
+            </div>
+            <div class="module-card" data-href="https://spatialturn.github.io/CaseStudyFoodDesert/" onclick="window.open(this.dataset.href, '_blank');">
+                <img src="/pexels-wendywei-1656663.jpg" alt="Food Desert">
+                <a href="https://spatialturn.github.io/CaseStudyFoodDesert/" target="_blank">Case Study 1: Food Desert</a>
+                <p>Utilizing GIS Tools to Under Food Availibility in an Area.</p>
             </div>
         </div>
         <div id="map"></div>
     </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Slider Functionality
-        const cards = document.getElementById('cardContainer');
-        const prevArrow = document.getElementById('prevArrow');
-        const nextArrow = document.getElementById('nextArrow');
-        let currentIndex = 0;
-        const cardWidth = 220; // 200px card + 20px gap
-        const visibleCards = 2;
-        const totalCards = cards.children.length;
-
-        function updateSlider() {
-            const maxIndex = totalCards - visibleCards;
-            cards.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-            prevArrow.style.visibility = currentIndex === 0 ? 'hidden' : 'visible';
-            nextArrow.style.visibility = currentIndex >= maxIndex ? 'hidden' : 'visible';
-        }
-
-        prevArrow.addEventListener('click', () => {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateSlider();
-            }
-        });
-
-        nextArrow.addEventListener('click', () => {
-            if (currentIndex < totalCards - visibleCards) {
-                currentIndex++;
-                updateSlider();
-            }
-        });
-
-        updateSlider();
-
         // Search Functionality
         const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('input', function() {
@@ -121,9 +79,6 @@
                 const text = card.querySelector('a').textContent.toLowerCase() + card.querySelector('p').textContent.toLowerCase();
                 card.style.display = text.includes(searchTerm) ? 'block' : 'none';
             });
-            // Reset slider when searching
-            currentIndex = 0;
-            updateSlider();
         });
 
         // Map Initialization
