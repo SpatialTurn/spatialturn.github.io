@@ -11,9 +11,11 @@
         body { margin: 0; font-family: 'Open Sans', sans-serif; background-color: #1a1a1a; color: #e0e0e0; cursor: url('https://www.cursor.cc/cursor/12/12/0/png'), auto; }
         header { background: linear-gradient(90deg, #333, #444); color: #fff; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #555; }
         header h1 { margin: 0; font-family: 'Roboto', sans-serif; font-size: 2em; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+        /* Commented out search box style for now
         header .search { flex-grow: 1; margin: 0 40px; }
         header .search input { width: 100%; padding: 10px 15px; background-color: #2a2a2a; color: #e0e0e0; border: 2px solid #555; border-radius: 25px; outline: none; transition: border-color 0.3s, box-shadow 0.3s; font-size: 1em; }
         header .search input:focus { border-color: #00aaff; box-shadow: 0 0 5px #00aaff; }
+        */
         .container { width: 100%; padding: 0 10px; }
         .main-content { text-align: center; padding: 40px 0; background: linear-gradient(135deg, #2a2a2a, #1e1e1e); border-radius: 15px; margin: 20px 0; box-shadow: 0 6px 15px rgba(0,0,0,0.6); }
         .main-content h2 { color: #00aaff; font-family: 'Roboto', sans-serif; font-size: 2.5em; margin-bottom: 20px; text-shadow: 2px 2px 6px rgba(0,0,0,0.8); }
@@ -38,7 +40,7 @@
             .modules { grid-template-columns: 1fr; max-width: 100%; }
             #map { width: 100%; max-width: none; height: auto; }
             header { padding: 15px 20px; }
-            header .search { margin: 0 20px; }
+            /* header .search { margin: 0 20px; } */
             .main-content { padding: 20px 0; }
         }
     </style>
@@ -47,9 +49,11 @@
     <div class="container">
         <header>
             <h1>Geospatial Training Tutorials</h1>
+            <!--
             <div class="search">
                 <input type="text" id="searchInput" placeholder="Search modules...">
             </div>
+            -->
         </header>
         <div class="main-content">
             <h2>Enabling the Geospatial Turn in the Social Sciences through Cyberinfrastructure Training</h2>
@@ -94,7 +98,8 @@
     </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Search Functionality
+        // Search Functionality - Commented out for now
+        /*
         const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
@@ -104,6 +109,7 @@
                 card.style.display = text.includes(searchTerm) ? 'block' : 'none';
             });
         });
+        */
 
         // Dynamically size map to match modules
         function resizeMap() {
