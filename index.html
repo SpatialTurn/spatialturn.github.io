@@ -5,139 +5,465 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geospatial Training Tutorials</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Open Sans', sans-serif; background-color: #1a1a1a; color: #e0e0e0; cursor: url('https://www.cursor.cc/cursor/12/12/0/png'), auto; }
-        header { background: linear-gradient(90deg, #333, #444); color: #fff; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #555; }
-        header h1 { margin: 0; font-family: 'Roboto', sans-serif; font-size: 2em; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
-        /* Commented out search box style for now
-        header .search { flex-grow: 1; margin: 0 40px; }
-        header .search input { width: 100%; padding: 10px 15px; background-color: #2a2a2a; color: #e0e0e0; border: 2px solid #555; border-radius: 25px; outline: none; transition: border-color 0.3s, box-shadow 0.3s; font-size: 1em; }
-        header .search input:focus { border-color: #00aaff; box-shadow: 0 0 5px #00aaff; }
-        */
-        .container { width: 100%; padding: 0 10px; }
-        .main-content { text-align: center; padding: 40px 0; background: linear-gradient(135deg, #2a2a2a, #1e1e1e); border-radius: 15px; margin: 20px 0; box-shadow: 0 6px 15px rgba(0,0,0,0.6); }
-        .main-content h2 { color: #00aaff; font-family: 'Roboto', sans-serif; font-size: 2.5em; margin-bottom: 20px; text-shadow: 2px 2px 6px rgba(0,0,0,0.8); }
-        .main-content p { color: #ccc; font-size: 1.2em; margin-bottom: 30px; line-height: 1.6; max-width: 900px; margin-left: auto; margin-right: auto; }
-        .modules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px 0; max-width: 100%; margin: 0 auto; justify-items: center; }
-        .module-card { background-color: #2e2e2e; border: 2px solid #444; border-radius: 8px; text-align: left; padding: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); transition: transform 0.4s ease, box-shadow 0.4s ease; width: 85%; }
-        .module-card:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 8px 16px rgba(0,170,255,0.3); }
-        .module-card img { width: 100%; height: auto; border-radius: 6px 6px 0 0; }
-        .module-card a { text-decoration: none; color: #00aaff; font-family: 'Roboto', sans-serif; font-weight: 700; display: block; margin: 8px 0; font-size: 1.2em; }
-        .module-card p { color: #bbb; font-size: 1em; margin: 6px 0; line-height: 1.3; }
-        #map { width: 100%; max-width: 1200px; height: auto; margin: 20px auto 0; border: 2px solid #444; border-radius: 8px; overflow: hidden; }
-        footer { background-color: #333; padding: 15px 20px; text-align: center; font-size: 0.9em; color: #aaa; border-top: 1px solid #555; margin-top: 20px; }
-        footer a { color: #00aaff; text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
-        @media (max-width: 1024px) {
-            .modules { grid-template-columns: repeat(2, 1fr); max-width: 100%; }
-            #map { width: 100%; max-width: 600px; }
-            .main-content h2 { font-size: 2em; }
-            .main-content p { font-size: 1em; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg-deep: #0c1221;
+            --bg-surface: #141e33;
+            --bg-card: #1a2740;
+            --bg-card-hover: #1f3050;
+            --accent-teal: #2dd4bf;
+            --accent-amber: #f59e0b;
+            --accent-teal-dim: rgba(45, 212, 191, 0.12);
+            --accent-amber-dim: rgba(245, 158, 11, 0.12);
+            --text-bright: #f1f5f9;
+            --text-body: #94a3b8;
+            --text-muted: #64748b;
+            --border: #1e3048;
+            --radius: 10px;
         }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-body);
+            line-height: 1.6;
+        }
+
+        /* ── HEADER ── */
+        .site-header {
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .site-header .logo-mark {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent-teal), #0ea5e9);
+            display: grid; place-items: center;
+            flex-shrink: 0;
+        }
+        .site-header .logo-mark svg { width: 20px; height: 20px; }
+        .site-header h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.25rem;
+            color: var(--text-bright);
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 72px 32px 48px;
+            text-align: center;
+        }
+        .hero .eyebrow {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent-teal);
+            background: var(--accent-teal-dim);
+            padding: 6px 14px;
+            border-radius: 100px;
+            margin-bottom: 24px;
+        }
+        .hero h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            color: var(--text-bright);
+            font-weight: 400;
+            line-height: 1.25;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 640px;
+            margin: 0 auto;
+            color: var(--text-body);
+        }
+
+        /* ── SCHEDULE WRAPPER ── */
+        .schedule {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px 64px;
+        }
+
+        /* ── DAY BLOCKS ── */
+        .day-block {
+            margin-bottom: 56px;
+        }
+        .day-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        .day-label .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent-teal);
+        }
+
+        /* ── SETUP CARD (full width) ── */
+        .setup-card {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 32px;
+            cursor: pointer;
+            transition: background 0.25s, border-color 0.25s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .setup-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-teal);
+        }
+        .setup-card .icon-box {
+            width: 56px; height: 56px;
+            border-radius: 12px;
+            background: var(--accent-teal-dim);
+            display: grid; place-items: center;
+            flex-shrink: 0;
+        }
+        .setup-card .icon-box svg { width: 28px; height: 28px; color: var(--accent-teal); }
+        .setup-card h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.25rem;
+            color: var(--text-bright);
+            font-weight: 400;
+            margin-bottom: 4px;
+        }
+        .setup-card p { font-size: 0.95rem; color: var(--text-body); }
+
+        /* ── FORK INDICATOR ── */
+        .fork-section {
+            position: relative;
+            margin-bottom: 32px;
+        }
+        .fork-label {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .fork-label span {
+            display: inline-block;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 8px 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-body);
+        }
+
+        /* ── TRACK COLUMNS ── */
+        .tracks {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .track {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        .track-header {
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .track--a .track-header { background: var(--accent-teal-dim); }
+        .track--b .track-header { background: var(--accent-amber-dim); }
+
+        .track-header .track-icon {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            display: grid; place-items: center;
+            flex-shrink: 0;
+        }
+        .track--a .track-icon { background: var(--accent-teal); }
+        .track--b .track-icon { background: var(--accent-amber); }
+        .track-icon svg { width: 20px; height: 20px; color: var(--bg-deep); }
+
+        .track-header-text h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.1rem;
+            color: var(--text-bright);
+            font-weight: 400;
+        }
+        .track-header-text p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .track-sessions { padding: 8px; }
+
+        .session-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            padding: 16px 18px;
+            border-radius: 8px;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        .session-card:hover { background: var(--bg-card-hover); }
+        .session-card + .session-card { border-top: 1px solid var(--border); }
+        .session-card .session-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .track--a .session-tag { color: var(--accent-teal); }
+        .track--b .session-tag { color: var(--accent-amber); }
+        .session-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-bright);
+            margin-bottom: 4px;
+        }
+        .session-card p { font-size: 0.88rem; color: var(--text-body); }
+
+        /* ── DAY 2 FULL-WIDTH CARD ── */
+        .day2-card {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            cursor: pointer;
+            transition: background 0.25s, border-color 0.25s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .day2-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-teal);
+        }
+        .day2-card .icon-box {
+            width: 56px; height: 56px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-teal-dim), var(--accent-amber-dim));
+            display: grid; place-items: center;
+            flex-shrink: 0;
+        }
+        .day2-card .icon-box svg { width: 28px; height: 28px; color: var(--accent-teal); }
+        .day2-card h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.25rem;
+            color: var(--text-bright);
+            font-weight: 400;
+            margin-bottom: 4px;
+        }
+        .day2-card p { font-size: 0.95rem; }
+        .day2-card .all-attend {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: var(--accent-amber);
+            background: var(--accent-amber-dim);
+            padding: 4px 10px;
+            border-radius: 100px;
+            margin-top: 8px;
+        }
+
+        /* ── MAP ── */
+        .map-section {
+            max-width: 1100px;
+            margin: 0 auto 48px;
+            padding: 0 24px;
+        }
+        .map-section .map-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+        #map {
+            width: 100%;
+            height: 340px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 24px 32px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        footer a { color: var(--accent-teal); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
-            .modules { grid-template-columns: 1fr; max-width: 100%; }
-            #map { width: 100%; max-width: none; height: auto; }
-            header { padding: 15px 20px; }
-            /* header .search { margin: 0 20px; } */
-            .main-content { padding: 20px 0; }
+            .hero { padding: 48px 20px 32px; }
+            .schedule { padding: 0 16px 48px; }
+            .tracks { grid-template-columns: 1fr; }
+            .setup-card, .day2-card { flex-direction: column; text-align: center; gap: 16px; padding: 24px 20px; }
+            #map { height: 260px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Geospatial Training Tutorials</h1>
-            <!--
-            <div class="search">
-                <input type="text" id="searchInput" placeholder="Search modules...">
-            </div>
-            -->
-        </header>
-        <div class="main-content">
-            <h2>Enabling the Geospatial Turn in the Social Sciences through Cyberinfrastructure Training</h2>
-            <p>Explore the basics or enhance your expertise with tutorials designed to empower your geospatial projects</p>
-            <div class="modules">
-		<div class="module-card" data-href="https://spatialturn.github.io/intromoduletest/" onclick="window.open(this.dataset.href, '_blank');">
-                    <img src="/pexels-zelch-20337592.jpg" alt="Jupiter">
-                    <a href="https://spatialturn.github.io/intromoduletest/" target="_blank">First Steps</a>
-                    <p>Resources for getting started with QGIS, Jupyter Notebooks, and Carpentries Workbench.</p>
-                </div>
-                <div class="module-card" data-href="https://spatialturn.github.io/session1a/" onclick="window.open(this.dataset.href, '_blank');">
-                    <img src="/pexels-googledeepmind-17484970.jpg" alt="Session 1A">
-                    <a href="https://spatialturn.github.io/session1a/" target="_blank">NSF Workshop - Session 1A</a>
-                    <p>Working and teaching with QGIS</p>
-                </div>
-                <div class="module-card" data-href="https://spatialturn.github.io/session2a/" onclick="window.open(this.dataset.href, '_blank');">
-                    <img src="/pexels-tomfisk-5241912.jpg" alt="Session 2A">
-                    <a href="https://spatialturn.github.io/session2a/" target="_blank">NSF Workshop - Session 2A</a>
-                    <p>Raster data and remote sensing tools</p>
-                </div>
-		<div class="module-card" data-href="https://spatialturn.github.io/session3a/" onclick="window.open(this.dataset.href, '_blank');">
-                    <img src="/pexels-spacex-60132.jpg" alt="Session 3A">
-                    <a href="https://spatialturn.github.io/session3a/" target="_blank">NSF Workshop - Session 3A</a>
-                    <p>Analysis and visualization with Satellite imagery</p>
-                </div>
-                <div class="module-card" data-href="https://spatialturn.github.io/IGIC2026/" onclick="window.open(this.dataset.href, '_blank');">
-                    <img src="/pexels-myburgh-1102797.jpg" alt="NSF Workshop - Session B">
-                    <a href="https://spatialturn.github.io/IGIC2026/" target="_blank">NSF Workshop - Session B</a>
-                    <p>Enabling the Geospatial Turn through Cyberinfrastructure Training</p>
-                </div>
-		<div class="module-card" data-href="https://spatialturn.github.io/DataCuration/" onclick="window.open(this.dataset.href, '_blank');">
-                    <img src="/pexels-artempodrez-6779716.jpg" alt="NSF Workshop Day 2">
-                    <a href="https://spatialturn.github.io/DataCuration/" target="_blank">NSF Workshop - Day 2</a>
-                    <p>Understand geospatial data curation techniques.</p>
-                </div>
-            </div>
-            <div id="map"></div>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="logo-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 11.5 7.3 11.8a1 1 0 0 0 1.4 0C13 21.5 20 15.4 20 10a8 8 0 0 0-8-8z"/></svg>
         </div>
-        <footer>
-            <p>&copy; 2025 Geospatial Training Tutorials. <a href="mailto:support@geospatialtutorials.com">Contact Us</a> | <a href="/privacy">Privacy Policy</a></p>
-        </footer>
+        <h1>Geospatial Training Tutorials</h1>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="eyebrow">NSF Cyberinfrastructure Workshop</div>
+        <h2>Enabling the Geospatial Turn in the Social Sciences</h2>
+        <p>A two-day workshop at Purdue University covering GIS fundamentals, remote sensing, Python-based spatial analysis, and data curation.</p>
+    </section>
+
+    <!-- SCHEDULE -->
+    <div class="schedule">
+
+        <!-- ── DAY 1 ── -->
+        <div class="day-block">
+            <div class="day-label"><span class="dot"></span> Day 1</div>
+
+            <!-- Setup -->
+            <a class="setup-card" href="https://spatialturn.github.io/intromoduletest/" target="_blank">
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                </div>
+                <div>
+                    <h3>First Steps</h3>
+                    <p>Install QGIS, set up Jupyter Notebooks, and review the workshop schedule.</p>
+                </div>
+            </a>
+
+            <!-- Fork -->
+            <div class="fork-section">
+                <div class="fork-label">
+                    <span>Choose your track</span>
+                </div>
+
+                <div class="tracks">
+                    <!-- Track A -->
+                    <div class="track track--a">
+                        <div class="track-header">
+                            <div class="track-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 3v18"/></svg>
+                            </div>
+                            <div class="track-header-text">
+                                <h3>Track A — GIS &amp; Raster Data</h3>
+                                <p>3 sessions · QGIS &amp; remote sensing</p>
+                            </div>
+                        </div>
+                        <div class="track-sessions">
+                            <a class="session-card" href="https://spatialturn.github.io/session1a/" target="_blank">
+                                <div class="session-tag">Session 1A</div>
+                                <h4>Working &amp; Teaching with QGIS</h4>
+                                <p>Introduction to the QGIS interface, loading data, and basic cartography.</p>
+                            </a>
+                            <a class="session-card" href="https://spatialturn.github.io/session2a/" target="_blank">
+                                <div class="session-tag">Session 2A</div>
+                                <h4>Raster Data &amp; Remote Sensing</h4>
+                                <p>Working with raster datasets and remote sensing tools in QGIS.</p>
+                            </a>
+                            <a class="session-card" href="https://spatialturn.github.io/session3a/" target="_blank">
+                                <div class="session-tag">Session 3A</div>
+                                <h4>Satellite Imagery Analysis</h4>
+                                <p>Analysis and visualization techniques with satellite imagery.</p>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Track B -->
+                    <div class="track track--b">
+                        <div class="track-header">
+                            <div class="track-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                            </div>
+                            <div class="track-header-text">
+                                <h3>Track B — Python in GIS</h3>
+                                <p>1 extended session · coding-heavy</p>
+                            </div>
+                        </div>
+                        <div class="track-sessions">
+                            <a class="session-card" href="https://spatialturn.github.io/IGIC2026/" target="_blank">
+                                <div class="session-tag">Session B</div>
+                                <h4>Geospatial Python</h4>
+                                <p>Hands-on spatial analysis and automation using Python, Jupyter Notebooks, and geospatial libraries.</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── DAY 2 ── -->
+        <div class="day-block">
+            <div class="day-label"><span class="dot"></span> Day 2</div>
+
+            <a class="day2-card" href="https://spatialturn.github.io/DataCuration/" target="_blank">
+                <div class="icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </div>
+                <div>
+                    <h3>Data Curation</h3>
+                    <p>Geospatial data types, metadata standards, data management across disciplines, and best practices for sharing and preserving spatial datasets.</p>
+                    <span class="all-attend">All participants</span>
+                </div>
+            </a>
+        </div>
     </div>
+
+    <!-- MAP -->
+    <div class="map-section">
+        <div class="map-label">Workshop location</div>
+        <div id="map"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2025 Geospatial Training Tutorials · <a href="mailto:support@geospatialtutorials.com">Contact</a> · <a href="/privacy">Privacy</a></p>
+    </footer>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Search Functionality - Commented out for now
-        /*
-        const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const cards = document.querySelectorAll('.module-card');
-            cards.forEach(card => {
-                const text = card.querySelector('a').textContent.toLowerCase() + card.querySelector('p').textContent.toLowerCase();
-                card.style.display = text.includes(searchTerm) ? 'block' : 'none';
-            });
-        });
-        */
-
-        // Dynamically size map to match modules
-        function resizeMap() {
-            const modules = document.querySelector('.modules');
-            const map = document.getElementById('map');
-            if (modules && map) {
-                const modulesWidth = modules.offsetWidth;
-                map.style.width = `${Math.min(modulesWidth, 1200)}px`;
-                const modulesHeight = modules.offsetHeight;
-                map.style.height = `${modulesHeight}px`;
-                map.style.margin = '20px auto';
-
-                // Invalidate Leaflet map size to adjust rendering
-                if (window.map) {
-                    window.map.invalidateSize();
-                }
-            }
-        }
-
-        // Run on load and resize
-        window.addEventListener('load', resizeMap);
-        window.addEventListener('resize', resizeMap);
-
-        // Map Initialization
-        var map = L.map('map').setView([40.42, -86.92], 13);
+        var map = L.map('map').setView([40.42, -86.92], 14);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
         L.marker([40.42, -86.92]).addTo(map)
             .bindPopup('Purdue University')
