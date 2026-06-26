@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="view-transition" content="same-origin">
     <title>Geospatial Training Tutorials</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -31,6 +32,44 @@
             line-height: 1.6;
         }
 
+        /* ── VIEW TRANSITIONS (Chromium) ── */
+        @view-transition {
+            navigation: auto;
+        }
+        ::view-transition-old(root) {
+            animation: fade-and-slide-out 0.3s ease both;
+        }
+        ::view-transition-new(root) {
+            animation: fade-and-slide-in 0.35s ease both;
+        }
+        /* Keep header stable across pages */
+        .site-header { view-transition-name: site-header; }
+        ::view-transition-old(site-header),
+        ::view-transition-new(site-header) {
+            animation: none;
+        }
+        footer { view-transition-name: site-footer; }
+        ::view-transition-old(site-footer),
+        ::view-transition-new(site-footer) {
+            animation: none;
+        }
+
+        @keyframes fade-and-slide-out {
+            to { opacity: 0; transform: translateY(8px); }
+        }
+        @keyframes fade-and-slide-in {
+            from { opacity: 0; transform: translateY(-8px); }
+        }
+
+        /* ── FALLBACK ENTRANCE (Safari / Firefox) ── */
+        @keyframes page-enter {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .page-content {
+            animation: page-enter 0.4s ease both;
+        }
+
         /* ── HEADER ── */
         .site-header {
             padding: 0 32px;
@@ -46,8 +85,8 @@
         .site-header .brand {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 16px 0;
+            gap: 14px;
+            padding: 14px 0;
             text-decoration: none;
         }
         .site-header .logo-mark {
@@ -64,6 +103,19 @@
             color: var(--text-bright);
             font-weight: 400;
             letter-spacing: 0.02em;
+        }
+        .header-divider {
+            width: 1px;
+            height: 28px;
+            background: var(--border);
+            margin: 0 4px;
+            flex-shrink: 0;
+        }
+        .purdue-logo {
+            height: 22px;
+            width: auto;
+            opacity: 0.85;
+            flex-shrink: 0;
         }
 
         /* ── NAV ── */
@@ -151,7 +203,6 @@
             border-color: var(--accent-teal);
             transform: translateY(-3px);
         }
-
         .module-tile .tile-icon {
             width: 48px; height: 48px;
             border-radius: 12px;
@@ -161,12 +212,12 @@
         }
         .module-tile .tile-icon svg { width: 24px; height: 24px; }
 
-        .tile-icon--management  { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+        .tile-icon--management    { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
         .tile-icon--visualization { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
-        .tile-icon--analysis    { background: rgba(14, 165, 233, 0.15); color: #38bdf8; }
-        .tile-icon--fooddesert  { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
-        .tile-icon--collection  { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
-        .tile-icon--curation    { background: var(--accent-teal-dim); color: var(--accent-teal); }
+        .tile-icon--analysis      { background: rgba(14, 165, 233, 0.15); color: #38bdf8; }
+        .tile-icon--fooddesert    { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+        .tile-icon--collection    { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+        .tile-icon--curation      { background: var(--accent-teal-dim); color: var(--accent-teal); }
 
         .module-tile h3 {
             font-family: 'DM Serif Display', serif;
@@ -214,6 +265,8 @@
             .site-header { padding: 0 16px; flex-wrap: wrap; }
             .site-nav { margin-left: 0; width: 100%; padding-bottom: 8px; }
             .site-header .brand-name { font-size: 1rem; }
+            .purdue-logo { height: 18px; }
+            .header-divider { display: none; }
         }
     </style>
 </head>
@@ -227,85 +280,86 @@
             </div>
             <span class="brand-name">Geospatial Training</span>
         </a>
+        <div class="header-divider"></div>
+        <img src="PU-H-Full-Rev-RGB.svg" alt="Purdue University" class="purdue-logo">
         <nav class="site-nav">
             <a href="index.html" class="active">Modules</a>
             <a href="workshop2026.html">Workshop 2026</a>
         </nav>
     </header>
 
-    <!-- HERO -->
-    <section class="hero">
-        <div class="eyebrow">Carpentries-Based Curriculum</div>
-        <h2>Enabling the Geospatial Turn in the Social Sciences</h2>
-        <p>Self-paced training modules covering the full lifecycle of geospatial data — from collection and management to analysis and visualization.</p>
-    </section>
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
 
-    <!-- MODULE GRID -->
-    <section class="modules-section">
-        <div class="modules-grid">
+        <!-- HERO -->
+        <section class="hero">
+            <div class="eyebrow">Carpentries-Based Curriculum</div>
+            <h2>Enabling the Geospatial Turn in the Social Sciences</h2>
+            <p>Self-paced training modules covering the full lifecycle of geospatial data — from collection and management to analysis and visualization.</p>
+        </section>
 
-            <!-- Data Management -->
-            <a class="module-tile" href="https://spatialturn.github.io/DataManagement/" target="_blank">
-                <div class="tile-icon tile-icon--management">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/><path d="M2 11h20"/></svg>
-                </div>
-                <h3>Data Management</h3>
-                <p>Organize, store, and maintain geospatial datasets with best practices for file structures, naming conventions, and version control.</p>
-                <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-            </a>
+        <!-- MODULE GRID -->
+        <section class="modules-section">
+            <div class="modules-grid">
 
-            <!-- Data Visualization -->
-            <a class="module-tile" href="https://spatialturn.github.io/DataVisualization/" target="_blank">
-                <div class="tile-icon tile-icon--visualization">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 17l4-8 4 4 4-6"/></svg>
-                </div>
-                <h3>Data Visualization</h3>
-                <p>Create compelling maps and charts that communicate spatial patterns, from choropleth maps to multi-layer thematic visualizations.</p>
-                <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-            </a>
+                <a class="module-tile" href="https://spatialturn.github.io/DataManagement/" target="_blank">
+                    <div class="tile-icon tile-icon--management">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/><path d="M2 11h20"/></svg>
+                    </div>
+                    <h3>Data Management</h3>
+                    <p>Organize, store, and maintain geospatial datasets with best practices for file structures, naming conventions, and version control.</p>
+                    <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+                </a>
 
-            <!-- Data Analysis -->
-            <a class="module-tile" href="https://spatialturn.github.io/DataAnalysis/" target="_blank">
-                <div class="tile-icon tile-icon--analysis">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg>
-                </div>
-                <h3>Data Analysis</h3>
-                <p>Apply spatial statistics, overlay analysis, and geoprocessing techniques to extract meaningful insights from geospatial data.</p>
-                <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-            </a>
+                <a class="module-tile" href="https://spatialturn.github.io/DataVisualization/" target="_blank">
+                    <div class="tile-icon tile-icon--visualization">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 17l4-8 4 4 4-6"/></svg>
+                    </div>
+                    <h3>Data Visualization</h3>
+                    <p>Create compelling maps and charts that communicate spatial patterns, from choropleth maps to multi-layer thematic visualizations.</p>
+                    <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+                </a>
 
-            <!-- Case Study: Food Desert -->
-            <a class="module-tile" href="https://spatialturn.github.io/CaseStudyFoodDesert/" target="_blank">
-                <div class="tile-icon tile-icon--fooddesert">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20.66 8A10 10 0 0 0 14 2.05V8h6.66z"/></svg>
-                </div>
-                <h3>Case Study: Food Desert</h3>
-                <p>A hands-on case study applying GIS techniques to identify and analyze food deserts using real-world demographic and infrastructure data.</p>
-                <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-            </a>
+                <a class="module-tile" href="https://spatialturn.github.io/DataAnalysis/" target="_blank">
+                    <div class="tile-icon tile-icon--analysis">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg>
+                    </div>
+                    <h3>Data Analysis</h3>
+                    <p>Apply spatial statistics, overlay analysis, and geoprocessing techniques to extract meaningful insights from geospatial data.</p>
+                    <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+                </a>
 
-            <!-- Data Collection -->
-            <a class="module-tile" href="https://spatialturn.github.io/DataCollection/" target="_blank">
-                <div class="tile-icon tile-icon--collection">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                </div>
-                <h3>Data Collection</h3>
-                <p>Methods for acquiring geospatial data — from GPS field collection and geocoding to working with public data portals and APIs.</p>
-                <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-            </a>
+                <a class="module-tile" href="https://spatialturn.github.io/FoodDesert/" target="_blank">
+                    <div class="tile-icon tile-icon--fooddesert">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20.66 8A10 10 0 0 0 14 2.05V8h6.66z"/></svg>
+                    </div>
+                    <h3>Case Study: Food Desert</h3>
+                    <p>A hands-on case study applying GIS techniques to identify and analyze food deserts using real-world demographic and infrastructure data.</p>
+                    <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+                </a>
 
-            <!-- Data Curation -->
-            <a class="module-tile" href="https://spatialturn.github.io/datacurationmain/" target="_blank">
-                <div class="tile-icon tile-icon--curation">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                </div>
-                <h3>Data Curation</h3>
-                <p>Metadata standards, data documentation, preservation strategies, and sharing practices across disciplines.</p>
-                <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-            </a>
+                <a class="module-tile" href="https://spatialturn.github.io/DataCollection/" target="_blank">
+                    <div class="tile-icon tile-icon--collection">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </div>
+                    <h3>Data Collection</h3>
+                    <p>Methods for acquiring geospatial data — from GPS field collection and geocoding to working with public data portals and APIs.</p>
+                    <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+                </a>
 
-        </div>
-    </section>
+                <a class="module-tile" href="https://spatialturn.github.io/datacurationmain/" target="_blank">
+                    <div class="tile-icon tile-icon--curation">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <h3>Data Curation</h3>
+                    <p>Metadata standards, data documentation, preservation strategies, and sharing practices across disciplines.</p>
+                    <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+                </a>
+
+            </div>
+        </section>
+
+    </div>
 
     <!-- FOOTER -->
     <footer>
