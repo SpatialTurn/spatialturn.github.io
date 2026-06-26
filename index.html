@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geospatial Training Tutorials</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -34,26 +33,59 @@
 
         /* ── HEADER ── */
         .site-header {
-            padding: 20px 32px;
+            padding: 0 32px;
             display: flex;
             align-items: center;
             gap: 16px;
             border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: var(--bg-deep);
+            z-index: 100;
+        }
+        .site-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 0;
+            text-decoration: none;
         }
         .site-header .logo-mark {
-            width: 36px; height: 36px;
+            width: 34px; height: 34px;
             border-radius: 8px;
             background: linear-gradient(135deg, var(--accent-teal), #0ea5e9);
             display: grid; place-items: center;
             flex-shrink: 0;
         }
-        .site-header .logo-mark svg { width: 20px; height: 20px; }
-        .site-header h1 {
+        .site-header .logo-mark svg { width: 18px; height: 18px; }
+        .site-header .brand-name {
             font-family: 'DM Serif Display', serif;
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             color: var(--text-bright);
             font-weight: 400;
             letter-spacing: 0.02em;
+        }
+
+        /* ── NAV ── */
+        .site-nav {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: auto;
+        }
+        .site-nav a {
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: color 0.2s, background 0.2s;
+        }
+        .site-nav a:hover { color: var(--text-bright); background: var(--bg-card); }
+        .site-nav a.active {
+            color: var(--accent-teal);
+            background: var(--accent-teal-dim);
         }
 
         /* ── HERO ── */
@@ -90,229 +122,76 @@
             color: var(--text-body);
         }
 
-        /* ── SCHEDULE WRAPPER ── */
-        .schedule {
+        /* ── MODULE GRID ── */
+        .modules-section {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 0 24px 64px;
+            padding: 0 24px 72px;
+        }
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
 
-        /* ── DAY BLOCKS ── */
-        .day-block {
-            margin-bottom: 56px;
+        .module-tile {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 24px 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.25s, border-color 0.25s, transform 0.25s;
+            position: relative;
         }
-        .day-label {
+        .module-tile:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-teal);
+            transform: translateY(-3px);
+        }
+
+        .module-tile .tile-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: grid; place-items: center;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+        .module-tile .tile-icon svg { width: 24px; height: 24px; }
+
+        .tile-icon--management  { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+        .tile-icon--visualization { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+        .tile-icon--analysis    { background: rgba(14, 165, 233, 0.15); color: #38bdf8; }
+        .tile-icon--fooddesert  { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+        .tile-icon--collection  { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+        .tile-icon--curation    { background: var(--accent-teal-dim); color: var(--accent-teal); }
+
+        .module-tile h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.2rem;
+            color: var(--text-bright);
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+        .module-tile p {
+            font-size: 0.9rem;
+            color: var(--text-body);
+            line-height: 1.55;
+            flex-grow: 1;
+        }
+        .module-tile .tile-arrow {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
-        .day-label .dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: var(--accent-teal);
-        }
-
-        /* ── SETUP CARD (full width) ── */
-        .setup-card {
-            display: flex;
-            align-items: center;
-            gap: 28px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px 28px;
-            margin-bottom: 32px;
-            cursor: pointer;
-            transition: background 0.25s, border-color 0.25s;
-            text-decoration: none;
-            color: inherit;
-        }
-        .setup-card:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--accent-teal);
-        }
-        .setup-card .icon-box {
-            width: 56px; height: 56px;
-            border-radius: 12px;
-            background: var(--accent-teal-dim);
-            display: grid; place-items: center;
-            flex-shrink: 0;
-        }
-        .setup-card .icon-box svg { width: 28px; height: 28px; color: var(--accent-teal); }
-        .setup-card h3 {
-            font-family: 'DM Serif Display', serif;
-            font-size: 1.25rem;
-            color: var(--text-bright);
-            font-weight: 400;
-            margin-bottom: 4px;
-        }
-        .setup-card p { font-size: 0.95rem; color: var(--text-body); }
-
-        /* ── FORK INDICATOR ── */
-        .fork-section {
-            position: relative;
-            margin-bottom: 32px;
-        }
-        .fork-label {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        .fork-label span {
-            display: inline-block;
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            padding: 8px 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-body);
-        }
-
-        /* ── TRACK COLUMNS ── */
-        .tracks {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
-        .track {
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-        .track-header {
-            padding: 18px 22px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .track--a .track-header { background: var(--accent-teal-dim); }
-        .track--b .track-header { background: var(--accent-amber-dim); }
-
-        .track-header .track-icon {
-            width: 36px; height: 36px;
-            border-radius: 8px;
-            display: grid; place-items: center;
-            flex-shrink: 0;
-        }
-        .track--a .track-icon { background: var(--accent-teal); }
-        .track--b .track-icon { background: var(--accent-amber); }
-        .track-icon svg { width: 20px; height: 20px; color: var(--bg-deep); }
-
-        .track-header-text h3 {
-            font-family: 'DM Serif Display', serif;
-            font-size: 1.1rem;
-            color: var(--text-bright);
-            font-weight: 400;
-        }
-        .track-header-text p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        .track-sessions { padding: 8px; }
-
-        .session-card {
-            display: block;
-            text-decoration: none;
-            color: inherit;
-            padding: 16px 18px;
-            border-radius: 8px;
-            transition: background 0.2s;
-            cursor: pointer;
-        }
-        .session-card:hover { background: var(--bg-card-hover); }
-        .session-card + .session-card { border-top: 1px solid var(--border); }
-        .session-card .session-tag {
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
-        .track--a .session-tag { color: var(--accent-teal); }
-        .track--b .session-tag { color: var(--accent-amber); }
-        .session-card h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-bright);
-            margin-bottom: 4px;
-        }
-        .session-card p { font-size: 0.88rem; color: var(--text-body); }
-
-        /* ── DAY 2 FULL-WIDTH CARD ── */
-        .day2-card {
-            display: flex;
-            align-items: center;
-            gap: 28px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 28px;
-            cursor: pointer;
-            transition: background 0.25s, border-color 0.25s;
-            text-decoration: none;
-            color: inherit;
-        }
-        .day2-card:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--accent-teal);
-        }
-        .day2-card .icon-box {
-            width: 56px; height: 56px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--accent-teal-dim), var(--accent-amber-dim));
-            display: grid; place-items: center;
-            flex-shrink: 0;
-        }
-        .day2-card .icon-box svg { width: 28px; height: 28px; color: var(--accent-teal); }
-        .day2-card h3 {
-            font-family: 'DM Serif Display', serif;
-            font-size: 1.25rem;
-            color: var(--text-bright);
-            font-weight: 400;
-            margin-bottom: 4px;
-        }
-        .day2-card p { font-size: 0.95rem; }
-        .day2-card .all-attend {
-            display: inline-block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            color: var(--accent-amber);
-            background: var(--accent-amber-dim);
-            padding: 4px 10px;
-            border-radius: 100px;
-            margin-top: 8px;
-        }
-
-        /* ── MAP ── */
-        .map-section {
-            max-width: 1100px;
-            margin: 0 auto 48px;
-            padding: 0 24px;
-        }
-        .map-section .map-label {
+            gap: 6px;
             font-size: 0.8rem;
             font-weight: 600;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
             color: var(--text-muted);
-            margin-bottom: 12px;
+            margin-top: 16px;
+            transition: color 0.2s, gap 0.2s;
         }
-        #map {
-            width: 100%;
-            height: 340px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-        }
+        .module-tile:hover .tile-arrow { color: var(--accent-teal); gap: 10px; }
 
         /* ── FOOTER ── */
         footer {
@@ -325,157 +204,108 @@
         footer a { color: var(--accent-teal); text-decoration: none; }
         footer a:hover { text-decoration: underline; }
 
-        /* ── LEAFLET DARK POPUP ── */
-        .dark-popup .leaflet-popup-content-wrapper {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-        }
-        .dark-popup .leaflet-popup-tip { background: var(--bg-card); }
-        .dark-popup .leaflet-popup-close-button { color: var(--text-muted); }
-        .dark-popup .leaflet-popup-close-button:hover { color: var(--text-bright); }
-        .leaflet-control-attribution {
-            background: var(--bg-card) !important;
-            color: var(--text-muted) !important;
-            font-size: 0.7rem !important;
-        }
-        .leaflet-control-attribution a { color: var(--accent-teal) !important; }
-        .leaflet-control-zoom a {
-            background: var(--bg-card) !important;
-            color: var(--text-body) !important;
-            border-color: var(--border) !important;
-        }
-        .leaflet-control-zoom a:hover { background: var(--bg-card-hover) !important; color: var(--text-bright) !important; }
-
         /* ── RESPONSIVE ── */
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
+            .modules-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .modules-grid { grid-template-columns: 1fr; }
             .hero { padding: 48px 20px 32px; }
-            .schedule { padding: 0 16px 48px; }
-            .tracks { grid-template-columns: 1fr; }
-            .setup-card, .day2-card { flex-direction: column; text-align: center; gap: 16px; padding: 24px 20px; }
-            #map { height: 260px; }
+            .site-header { padding: 0 16px; flex-wrap: wrap; }
+            .site-nav { margin-left: 0; width: 100%; padding-bottom: 8px; }
+            .site-header .brand-name { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
+    <!-- HEADER + NAV -->
     <header class="site-header">
-        <div class="logo-mark">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 11.5 7.3 11.8a1 1 0 0 0 1.4 0C13 21.5 20 15.4 20 10a8 8 0 0 0-8-8z"/></svg>
-        </div>
-        <h1>Geospatial Training Tutorials</h1>
+        <a class="brand" href="index.html">
+            <div class="logo-mark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 11.5 7.3 11.8a1 1 0 0 0 1.4 0C13 21.5 20 15.4 20 10a8 8 0 0 0-8-8z"/></svg>
+            </div>
+            <span class="brand-name">Geospatial Training</span>
+        </a>
+        <nav class="site-nav">
+            <a href="index.html" class="active">Modules</a>
+            <a href="workshop2026.html">Workshop 2026</a>
+        </nav>
     </header>
 
     <!-- HERO -->
     <section class="hero">
-        <div class="eyebrow">NSF Cyberinfrastructure Workshop</div>
-        <h2>Purdue-NSF GIS Cybertraining for the Social Sciences Workshop</h2>
-        <p>Workshop at Purdue University covering GIS fundamentals, remote sensing, Python-based spatial analysis, and data curation.</p>
+        <div class="eyebrow">Carpentries-Based Curriculum</div>
+        <h2>Enabling the Geospatial Turn in the Social Sciences</h2>
+        <p>Self-paced training modules covering the full lifecycle of geospatial data — from collection and management to analysis and visualization.</p>
     </section>
 
-    <!-- SCHEDULE -->
-    <div class="schedule">
+    <!-- MODULE GRID -->
+    <section class="modules-section">
+        <div class="modules-grid">
 
-        <!-- ── DAY 1 ── -->
-        <div class="day-block">
-            <div class="day-label"><span class="dot"></span> Day 1</div>
-
-            <!-- Setup -->
-            <a class="setup-card" href="https://spatialturn.github.io/intromoduletest/" target="_blank">
-                <div class="icon-box">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+            <!-- Data Management -->
+            <a class="module-tile" href="https://spatialturn.github.io/DataManagement/" target="_blank">
+                <div class="tile-icon tile-icon--management">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/><path d="M2 11h20"/></svg>
                 </div>
-                <div>
-                    <h3>First Steps</h3>
-                    <p>Install QGIS, set up Jupyter Notebooks, and review the workshop schedule.</p>
-                </div>
+                <h3>Data Management</h3>
+                <p>Organize, store, and maintain geospatial datasets with best practices for file structures, naming conventions, and version control.</p>
+                <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
             </a>
 
-            <!-- Fork -->
-            <div class="fork-section">
-                <div class="fork-label">
-                    <span>Choose your track</span>
+            <!-- Data Visualization -->
+            <a class="module-tile" href="https://spatialturn.github.io/DataVisualization/" target="_blank">
+                <div class="tile-icon tile-icon--visualization">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 17l4-8 4 4 4-6"/></svg>
                 </div>
+                <h3>Data Visualization</h3>
+                <p>Create compelling maps and charts that communicate spatial patterns, from choropleth maps to multi-layer thematic visualizations.</p>
+                <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
 
-                <div class="tracks">
-                    <!-- Track A -->
-                    <div class="track track--a">
-                        <div class="track-header">
-                            <div class="track-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 3v18"/></svg>
-                            </div>
-                            <div class="track-header-text">
-                                <h3>Track A — GIS &amp; Raster Data</h3>
-                                <p>3 sessions · QGIS &amp; remote sensing</p>
-                            </div>
-                        </div>
-                        <div class="track-sessions">
-                            <a class="session-card" href="https://spatialturn.github.io/session1a/" target="_blank">
-                                <div class="session-tag">Session 1A</div>
-                                <h4>Working &amp; Teaching with QGIS</h4>
-                                <p>Introduction to the QGIS interface, loading data, and basic cartography.</p>
-                            </a>
-                            <a class="session-card" href="https://spatialturn.github.io/session2a/" target="_blank">
-                                <div class="session-tag">Session 2A</div>
-                                <h4>Raster Data &amp; Remote Sensing</h4>
-                                <p>Working with raster datasets and remote sensing tools in QGIS.</p>
-                            </a>
-                            <a class="session-card" href="https://spatialturn.github.io/session3a/" target="_blank">
-                                <div class="session-tag">Session 3A</div>
-                                <h4>Satellite Imagery Analysis</h4>
-                                <p>Analysis and visualization techniques with satellite imagery.</p>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Track B -->
-                    <div class="track track--b">
-                        <div class="track-header">
-                            <div class="track-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                            </div>
-                            <div class="track-header-text">
-                                <h3>Track B — Python in GIS</h3>
-                                <p>1 extended session · coding-heavy</p>
-                            </div>
-                        </div>
-                        <div class="track-sessions">
-                            <a class="session-card" href="https://spatialturn.github.io/IGIC2026/" target="_blank">
-                                <div class="session-tag">Session B</div>
-                                <h4>Geospatial Python</h4>
-                                <p>Hands-on spatial analysis and automation using Python, Jupyter Notebooks, and geospatial libraries.</p>
-                            </a>
-                        </div>
-                    </div>
+            <!-- Data Analysis -->
+            <a class="module-tile" href="https://spatialturn.github.io/DataAnalysis/" target="_blank">
+                <div class="tile-icon tile-icon--analysis">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg>
                 </div>
-            </div>
-        </div>
+                <h3>Data Analysis</h3>
+                <p>Apply spatial statistics, overlay analysis, and geoprocessing techniques to extract meaningful insights from geospatial data.</p>
+                <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
 
-        <!-- ── DAY 2 ── -->
-        <div class="day-block">
-            <div class="day-label"><span class="dot"></span> Day 2</div>
+            <!-- Case Study: Food Desert -->
+            <a class="module-tile" href="https://spatialturn.github.io/CaseStudyFoodDesert/" target="_blank">
+                <div class="tile-icon tile-icon--fooddesert">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20.66 8A10 10 0 0 0 14 2.05V8h6.66z"/></svg>
+                </div>
+                <h3>Case Study: Food Desert</h3>
+                <p>A hands-on case study applying GIS techniques to identify and analyze food deserts using real-world demographic and infrastructure data.</p>
+                <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
 
-            <a class="day2-card" href="https://spatialturn.github.io/DataCuration/" target="_blank">
-                <div class="icon-box">
+            <!-- Data Collection -->
+            <a class="module-tile" href="https://spatialturn.github.io/DataCollection/" target="_blank">
+                <div class="tile-icon tile-icon--collection">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </div>
+                <h3>Data Collection</h3>
+                <p>Methods for acquiring geospatial data — from GPS field collection and geocoding to working with public data portals and APIs.</p>
+                <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
+
+            <!-- Data Curation -->
+            <a class="module-tile" href="https://spatialturn.github.io/DataCuration/" target="_blank">
+                <div class="tile-icon tile-icon--curation">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                 </div>
-                <div>
-                    <h3>Putting it all Together: Designing and Building Geospatial Teaching Modules</h3>
-                    <p>Geospatial data types, metadata standards, data management across disciplines, and best practices for sharing and preserving spatial datasets.</p>
-                    <span class="all-attend">All participants</span>
-                </div>
+                <h3>Data Curation</h3>
+                <p>Metadata standards, data documentation, preservation strategies, and sharing practices across disciplines.</p>
+                <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
             </a>
-        </div>
-    </div>
 
-    <!-- MAP -->
-    <div class="map-section">
-        <div class="map-label">Workshop location</div>
-        <p style="color:var(--text-body); font-size:0.95rem; margin-bottom:14px;">Wilmeth Active Learning Center (WALC) · 340 Centennial Mall Dr, West Lafayette, IN 47907</p>
-        <div id="map"></div>
-    </div>
+        </div>
+    </section>
 
     <!-- FOOTER -->
     <footer>
@@ -483,27 +313,5 @@
         <p style="margin-top:6px;">This site does not collect, store, or share any personal information.</p>
     </footer>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        var map = L.map('map', { scrollWheelZoom: false }).setView([40.42745, -86.91320], 16);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · <a href="https://carto.com/">CARTO</a>'
-        }).addTo(map);
-
-        var walcIcon = L.divIcon({
-            className: '',
-            html: '<div style="width:14px;height:14px;background:#2dd4bf;border:3px solid #0c1221;border-radius:50%;box-shadow:0 0 10px rgba(45,212,191,0.5);"></div>',
-            iconSize: [14, 14],
-            iconAnchor: [7, 7],
-            popupAnchor: [0, -10]
-        });
-
-        L.marker([40.42745, -86.91320], { icon: walcIcon }).addTo(map)
-            .bindPopup('<div style="font-family:Inter,sans-serif;font-size:13px;line-height:1.5;color:#e2e8f0;"><strong>WALC</strong><br>Wilmeth Active Learning Center<br><span style="color:#94a3b8;">340 Centennial Mall Dr</span></div>', {
-                className: 'dark-popup'
-            })
-            .openPopup();
-    </script>
 </body>
 </html>
