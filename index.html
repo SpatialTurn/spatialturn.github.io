@@ -221,6 +221,27 @@
         }
         .module-tile:hover .tile-arrow { color: var(--accent-teal); gap: 10px; }
 
+        /* ── UNDER CONSTRUCTION ── */
+        .module-tile.wip { opacity: 0.75; }
+        .module-tile.wip:hover { opacity: 0.9; }
+        .wip-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--accent-amber);
+            background: var(--accent-amber-dim);
+            padding: 4px 10px;
+            border-radius: 100px;
+            position: absolute;
+            top: 14px;
+            right: 14px;
+        }
+        .wip-badge svg { width: 12px; height: 12px; }
+
         /* ── FOOTER ── */
         footer {
             border-top: 1px solid var(--border);
@@ -258,7 +279,9 @@
             <span class="brand-name">Geospatial Training</span>
         </a>
         <div class="header-divider"></div>
-        <img src="PU-H-Full-Rev-RGB.svg" alt="Purdue University" class="purdue-logo">
+        <a href="https://www.purdue.edu/" target="_blank" style="display:flex;align-items:center;flex-shrink:0;">
+            <img src="PU-H-Full-Rev-RGB.svg" alt="Purdue University" class="purdue-logo">
+        </a>
         <nav class="site-nav">
             <a href="index.html" class="active">Modules</a>
             <a href="workshop2026.html">Workshop 2026</a>
@@ -279,7 +302,8 @@
         <section class="modules-section">
             <div class="modules-grid">
 
-                <a class="module-tile" href="https://spatialturn.github.io/DataManagement/" target="_blank">
+                <a class="module-tile wip" href="https://spatialturn.github.io/DataManagement/" target="_blank">
+                    <span class="wip-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg> In progress</span>
                     <div class="tile-icon tile-icon--management">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/><path d="M2 11h20"/></svg>
                     </div>
@@ -310,8 +334,8 @@
                     <div class="tile-icon tile-icon--fooddesert">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20.66 8A10 10 0 0 0 14 2.05V8h6.66z"/></svg>
                     </div>
-                    <h3>Case Study: Food Desert</h3>
-                    <p>A hands-on case study applying GIS techniques to identify and analyze food deserts using real-world demographic and infrastructure data.</p>
+                    <h3>Case Studies</h3>
+                    <p>Hands-on case studies applying GIS techniques to real-world problems, starting with food desert analysis using demographic and infrastructure data.</p>
                     <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
                 </a>
 
@@ -324,7 +348,8 @@
                     <span class="tile-arrow">Open module <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
                 </a>
 
-                <a class="module-tile" href="https://spatialturn.github.io/datacurationmain/" target="_blank">
+                <a class="module-tile wip" href="https://spatialturn.github.io/datacurationmain/" target="_blank">
+                    <span class="wip-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg> In progress</span>
                     <div class="tile-icon tile-icon--curation">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                     </div>
