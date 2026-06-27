@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="view-transition" content="same-origin">
     <title>Workshop 2026 — Geospatial Training Tutorials</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -33,41 +32,20 @@
             line-height: 1.6;
         }
 
-        /* ── VIEW TRANSITIONS (Chromium) ── */
-        @view-transition {
-            navigation: auto;
-        }
-        ::view-transition-old(root) {
-            animation: fade-and-slide-out 0.3s ease both;
-        }
-        ::view-transition-new(root) {
-            animation: fade-and-slide-in 0.35s ease both;
-        }
-        .site-header { view-transition-name: site-header; }
-        ::view-transition-old(site-header),
-        ::view-transition-new(site-header) {
-            animation: none;
-        }
-        footer { view-transition-name: site-footer; }
-        ::view-transition-old(site-footer),
-        ::view-transition-new(site-footer) {
-            animation: none;
-        }
-
-        @keyframes fade-and-slide-out {
-            to { opacity: 0; transform: translateY(8px); }
-        }
-        @keyframes fade-and-slide-in {
-            from { opacity: 0; transform: translateY(-8px); }
-        }
-
-        /* ── FALLBACK ENTRANCE (Safari / Firefox) ── */
+        /* ── PAGE TRANSITIONS ── */
         @keyframes page-enter {
-            from { opacity: 0; transform: translateY(12px); }
+            from { opacity: 0; transform: translateY(16px); }
             to   { opacity: 1; transform: translateY(0); }
         }
+        @keyframes page-exit {
+            from { opacity: 1; transform: translateY(0); }
+            to   { opacity: 0; transform: translateY(-12px); }
+        }
         .page-content {
-            animation: page-enter 0.4s ease both;
+            animation: page-enter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .page-content.leaving {
+            animation: page-exit 0.25s cubic-bezier(0.55, 0, 1, 0.45) both;
         }
 
         /* ── HEADER + NAV ── */
@@ -586,6 +564,19 @@
                 className: 'dark-popup'
             })
             .openPopup();
+    </script>
+    <script>
+        document.querySelectorAll('.site-nav a:not(.active)').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var href = this.href;
+                var content = document.querySelector('.page-content');
+                content.classList.add('leaving');
+                content.addEventListener('animationend', function() {
+                    window.location.href = href;
+                }, { once: true });
+            });
+        });
     </script>
 </body>
 </html>
