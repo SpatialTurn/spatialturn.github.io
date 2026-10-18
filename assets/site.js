@@ -181,6 +181,11 @@
       var eps = m.episodes.filter(function (e) { return inPath(e, view); });
       var sum = eps.reduce(function (s, e) { return s + e.mins; }, 0);
       total += eps.length; mins += sum; shared += eps.filter(function (e) { return e.tag === "theory"; }).length;
+      var theoryOnly = eps.every(function (e) { return e.tag === "theory"; });
+      if (theoryOnly) {
+        desc.textContent = "Theory for both paths · " + eps.length + " episodes · about " + fmt(sum);
+        return;
+      }
       desc.textContent = eps.length + (eps.length === 1 ? " episode" : " episodes") + " · about " + fmt(sum);
       var ul = el("ul", "eps");
       eps.forEach(function (e) {
@@ -197,6 +202,7 @@
       li.appendChild(ul);
     });
 
+    arrange(view);
     if (view === "all") {
       title.textContent = orig.title;
       summary.textContent = data.modules.length + " modules · " + all + " episodes";
@@ -215,6 +221,36 @@
       bs[j].setAttribute("aria-checked", on ? "true" : "false");
       bs[j].tabIndex = on ? 0 : -1;
     }
+  }
+
+  /* Path views: two columns whose bottoms line up (QGIS: left 1, 4, 5, 6 and right 2, 3, 7; Python: Data
+     Visualization moves to the right, to balance the columns). All modules: the
+     original legend grid. On phones the columns dissolve and the tiles follow their numbers. */
+  var tiles = Array.prototype.slice.call(list.querySelectorAll("li[data-module]"));
+  tiles.forEach(function (li, i) { li.style.order = i + 1; });
+  var COLS = {
+    qgis: [["Foundations", "DataAnalysis", "DataVisualization", "DataCuration"],
+           ["DataManagement", "DataCollection", "CaseStudies"]],
+    python: [["Foundations", "DataAnalysis", "DataCuration"],
+             ["DataManagement", "DataCollection", "DataVisualization", "CaseStudies"]]
+  };
+  function arrange(view) {
+    var wraps = list.querySelectorAll(".pcol");
+    if (view === "all") {
+      tiles.forEach(function (li) { list.appendChild(li); });
+      for (var i = 0; i < wraps.length; i++) list.removeChild(wraps[i]);
+      list.classList.remove("path-view");
+      return;
+    }
+    if (!wraps.length) {
+      [0, 1].forEach(function () { var w = el("li", "pcol"); w.appendChild(el("ol", "pcol-list")); list.appendChild(w); });
+      wraps = list.querySelectorAll(".pcol");
+    }
+    COLS[view].forEach(function (names, c) {
+      var col = wraps[c].firstChild;
+      names.forEach(function (n) { var li = list.querySelector('[data-module="' + n + '"]'); if (li) col.appendChild(li); });
+    });
+    list.classList.add("path-view");
   }
 
   function setView(view, push) {
