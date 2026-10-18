@@ -1,584 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workshop 2026 — Geospatial Training Tutorials</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            --bg-deep: #0c1221;
-            --bg-surface: #141e33;
-            --bg-card: #1a2740;
-            --bg-card-hover: #1f3050;
-            --accent-teal: #2dd4bf;
-            --accent-amber: #f59e0b;
-            --accent-teal-dim: rgba(45, 212, 191, 0.12);
-            --accent-amber-dim: rgba(245, 158, 11, 0.12);
-            --text-bright: #f1f5f9;
-            --text-body: #94a3b8;
-            --text-muted: #64748b;
-            --border: #1e3048;
-            --radius: 10px;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-deep);
-            color: var(--text-body);
-            line-height: 1.6;
-        }
-
-        /* ── PAGE TRANSITIONS ── */
-        @keyframes page-enter {
-            from { opacity: 0; transform: translateY(16px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes page-exit {
-            from { opacity: 1; transform: translateY(0); }
-            to   { opacity: 0; transform: translateY(-12px); }
-        }
-        .page-content {
-            animation: page-enter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-        .page-content.leaving {
-            animation: page-exit 0.25s cubic-bezier(0.55, 0, 1, 0.45) both;
-        }
-
-        /* ── HEADER + NAV ── */
-        .site-header {
-            padding: 0 32px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            background: var(--bg-deep);
-            z-index: 100;
-        }
-        .site-header .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 0;
-            text-decoration: none;
-        }
-        .site-header .logo-mark {
-            width: 34px; height: 34px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, var(--accent-teal), #0ea5e9);
-            display: grid; place-items: center;
-            flex-shrink: 0;
-        }
-        .site-header .logo-mark svg { width: 18px; height: 18px; }
-        .site-header .brand-name {
-            font-family: 'DM Serif Display', serif;
-            font-size: 1.15rem;
-            color: var(--text-bright);
-            font-weight: 400;
-            letter-spacing: 0.02em;
-        }
-        .header-divider {
-            width: 1px;
-            height: 28px;
-            background: var(--border);
-            margin: 0 4px;
-            flex-shrink: 0;
-        }
-        .purdue-logo {
-            height: 22px;
-            width: auto;
-            opacity: 0.85;
-            flex-shrink: 0;
-        }
-        .site-nav {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-left: auto;
-        }
-        .site-nav a {
-            text-decoration: none;
-            font-size: 0.88rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            padding: 10px 16px;
-            border-radius: 8px;
-            transition: color 0.2s, background 0.2s;
-        }
-        .site-nav a:hover { color: var(--text-bright); background: var(--bg-card); }
-        .site-nav a.active {
-            color: var(--accent-teal);
-            background: var(--accent-teal-dim);
-        }
-
-        /* ── HERO ── */
-        .hero {
-            max-width: 880px;
-            margin: 0 auto;
-            padding: 72px 32px 48px;
-            text-align: center;
-        }
-        .hero .eyebrow {
-            display: inline-block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--accent-teal);
-            background: var(--accent-teal-dim);
-            padding: 6px 14px;
-            border-radius: 100px;
-            margin-bottom: 24px;
-        }
-        .hero h2 {
-            font-family: 'DM Serif Display', serif;
-            font-size: clamp(1.8rem, 4vw, 2.8rem);
-            color: var(--text-bright);
-            font-weight: 400;
-            line-height: 1.25;
-            margin-bottom: 20px;
-        }
-        .hero p {
-            font-size: 1.1rem;
-            max-width: 640px;
-            margin: 0 auto;
-            color: var(--text-body);
-        }
-
-        /* ── SCHEDULE ── */
-        .schedule {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 24px 64px;
-        }
-        .day-block { margin-bottom: 56px; }
-        .day-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
-        .day-label .dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: var(--accent-teal);
-        }
-
-        /* ── SETUP CARD ── */
-        .setup-card {
-            display: flex;
-            align-items: center;
-            gap: 28px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px 28px;
-            margin-bottom: 32px;
-            cursor: pointer;
-            transition: background 0.25s, border-color 0.25s;
-            text-decoration: none;
-            color: inherit;
-        }
-        .setup-card:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--accent-teal);
-        }
-        .setup-card .icon-box {
-            width: 56px; height: 56px;
-            border-radius: 12px;
-            background: var(--accent-teal-dim);
-            display: grid; place-items: center;
-            flex-shrink: 0;
-        }
-        .setup-card .icon-box svg { width: 28px; height: 28px; color: var(--accent-teal); }
-        .setup-card h3 {
-            font-family: 'DM Serif Display', serif;
-            font-size: 1.25rem;
-            color: var(--text-bright);
-            font-weight: 400;
-            margin-bottom: 4px;
-        }
-        .setup-card p { font-size: 0.95rem; color: var(--text-body); }
-
-        /* ── FORK ── */
-        .fork-section { position: relative; margin-bottom: 32px; }
-        .fork-label { text-align: center; margin-bottom: 24px; }
-        .fork-label span {
-            display: inline-block;
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            padding: 8px 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-body);
-        }
-
-        /* ── TRACKS ── */
-        .tracks {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-        .track {
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-        .track-header {
-            padding: 18px 22px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .track--a .track-header { background: var(--accent-teal-dim); }
-        .track--b .track-header { background: var(--accent-amber-dim); }
-        .track-header .track-icon {
-            width: 36px; height: 36px;
-            border-radius: 8px;
-            display: grid; place-items: center;
-            flex-shrink: 0;
-        }
-        .track--a .track-icon { background: var(--accent-teal); }
-        .track--b .track-icon { background: var(--accent-amber); }
-        .track-icon svg { width: 20px; height: 20px; color: var(--bg-deep); }
-        .track-header-text h3 {
-            font-family: 'DM Serif Display', serif;
-            font-size: 1.1rem;
-            color: var(--text-bright);
-            font-weight: 400;
-        }
-        .track-header-text p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-        .track-sessions { padding: 8px; }
-        .session-card {
-            display: block;
-            text-decoration: none;
-            color: inherit;
-            padding: 16px 18px;
-            border-radius: 8px;
-            transition: background 0.2s;
-            cursor: pointer;
-        }
-        .session-card:hover { background: var(--bg-card-hover); }
-        .session-card + .session-card { border-top: 1px solid var(--border); }
-        .session-card .session-tag {
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
-        .track--a .session-tag { color: var(--accent-teal); }
-        .track--b .session-tag { color: var(--accent-amber); }
-        .session-card h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-bright);
-            margin-bottom: 4px;
-        }
-        .session-card p { font-size: 0.88rem; color: var(--text-body); }
-
-        /* ── DAY 2 CARD ── */
-        .day2-card {
-            display: flex;
-            align-items: center;
-            gap: 28px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 28px;
-            cursor: pointer;
-            transition: background 0.25s, border-color 0.25s;
-            text-decoration: none;
-            color: inherit;
-        }
-        .day2-card:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--accent-teal);
-        }
-        .day2-card .icon-box {
-            width: 56px; height: 56px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--accent-teal-dim), var(--accent-amber-dim));
-            display: grid; place-items: center;
-            flex-shrink: 0;
-        }
-        .day2-card .icon-box svg { width: 28px; height: 28px; color: var(--accent-teal); }
-        .day2-card h3 {
-            font-family: 'DM Serif Display', serif;
-            font-size: 1.25rem;
-            color: var(--text-bright);
-            font-weight: 400;
-            margin-bottom: 4px;
-        }
-        .day2-card p { font-size: 0.95rem; }
-        .day2-card .all-attend {
-            display: inline-block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            color: var(--accent-amber);
-            background: var(--accent-amber-dim);
-            padding: 4px 10px;
-            border-radius: 100px;
-            margin-top: 8px;
-        }
-
-        /* ── MAP ── */
-        .map-section {
-            max-width: 1100px;
-            margin: 0 auto 48px;
-            padding: 0 24px;
-        }
-        .map-section .map-label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-        }
-        #map {
-            width: 100%;
-            height: 340px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-        }
-
-        /* ── FOOTER ── */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 24px 32px;
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-        footer a { color: var(--accent-teal); text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
-
-        /* ── LEAFLET OVERRIDES ── */
-        .dark-popup .leaflet-popup-content-wrapper {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-        }
-        .dark-popup .leaflet-popup-tip { background: var(--bg-card); }
-        .dark-popup .leaflet-popup-close-button { color: var(--text-muted); }
-        .dark-popup .leaflet-popup-close-button:hover { color: var(--text-bright); }
-        .leaflet-control-attribution {
-            background: var(--bg-card) !important;
-            color: var(--text-muted) !important;
-            font-size: 0.7rem !important;
-        }
-        .leaflet-control-attribution a { color: var(--accent-teal) !important; }
-        .leaflet-control-zoom a {
-            background: var(--bg-card) !important;
-            color: var(--text-body) !important;
-            border-color: var(--border) !important;
-        }
-        .leaflet-control-zoom a:hover { background: var(--bg-card-hover) !important; color: var(--text-bright) !important; }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 768px) {
-            .hero { padding: 48px 20px 32px; }
-            .schedule { padding: 0 16px 48px; }
-            .tracks { grid-template-columns: 1fr; }
-            .setup-card, .day2-card { flex-direction: column; text-align: center; gap: 16px; padding: 24px 20px; }
-            #map { height: 260px; }
-            .site-header { padding: 0 16px; flex-wrap: wrap; }
-            .site-nav { margin-left: 0; width: 100%; padding-bottom: 8px; }
-            .site-header .brand-name { font-size: 1rem; }
-            .purdue-logo { height: 18px; }
-            .header-divider { display: none; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workshop 2026 | Enabling the Geospatial Turn</title>
+<meta name="description" content="Purdue-NSF GIS CyberTraining for the Social Sciences Workshop: a two-day workshop at Purdue University on GIS, remote sensing, Python and data curation.">
+<meta name="color-scheme" content="dark light">
+<script>
+  try { var t = localStorage.getItem("st-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+</script>
+<link rel="preload" href="assets/fonts/barlow-condensed-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230F1A1F'/%3E%3Cpath d='M4 22c6-8 10 2 16-6s8-6 8-6' fill='none' stroke='%23CFB991' stroke-width='2.5'/%3E%3Cpath d='M4 28c6-8 10 2 16-6s8-6 8-6' fill='none' stroke='%237C8F86' stroke-width='1.5'/%3E%3C/svg%3E">
 </head>
-<body>
+<body class="workshop">
+<a class="skip" href="#main">Skip to content</a>
 
-    <!-- HEADER + NAV -->
-    <header class="site-header">
-        <a class="brand" href="index.html">
-            <div class="logo-mark">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 11.5 7.3 11.8a1 1 0 0 0 1.4 0C13 21.5 20 15.4 20 10a8 8 0 0 0-8-8z"/></svg>
-            </div>
-            <span class="brand-name">Geospatial Training</span>
-        </a>
-        <div class="header-divider"></div>
-        <a href="https://www.purdue.edu/" target="_blank" style="display:flex;align-items:center;flex-shrink:0;">
-            <img src="PU-H-Full-Rev-RGB.svg" alt="Purdue University" class="purdue-logo">
-        </a>
-        <nav class="site-nav">
-            <a href="index.html">Modules</a>
-            <a href="workshop2026.html" class="active">Workshop 2026</a>
+<div class="sheet">
+  <div class="collar collar-top" aria-hidden="true">
+    <span>40°25′39″ N, 86°54′48″ W</span>
+    <span>Wilmeth Active Learning Center</span>
+  </div>
+
+  <div class="neatline">
+    <div class="frame">
+
+      <header class="site-header">
+        <a class="brand" href="index.html">Geospatial Turn</a>
+        <nav aria-label="Main">
+          <a href="index.html">All modules</a>
+          <button class="theme-toggle" type="button" aria-pressed="false" aria-label="Switch to light theme">
+            <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></svg>
+            <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+            <span class="theme-label">Light</span>
+          </button>
         </nav>
-    </header>
+      </header>
 
-    <!-- PAGE CONTENT -->
-    <div class="page-content">
-
-        <!-- HERO -->
-        <section class="hero">
-            <div class="eyebrow">NSF Cyberinfrastructure Workshop</div>
-            <h2>Purdue-NSF GIS Cybertraining for the Social Sciences Workshop</h2>
-            <p>A two-day workshop at Purdue University covering GIS fundamentals, remote sensing, Python-based spatial analysis, and data curation.</p>
+      <main id="main">
+        <section class="ws-hero" aria-labelledby="ws-title">
+          <div class="ws-intro">
+            <p class="kicker">Workshop 2026 · Purdue University</p>
+            <h1 id="ws-title">Purdue-NSF GIS CyberTraining for the Social Sciences Workshop</h1>
+            <p class="lede">A two-day workshop at Purdue University covering GIS fundamentals, remote sensing, Python-based spatial analysis, and data curation.</p>
+          </div>
+          <aside class="ws-where" aria-labelledby="where-title">
+            <h2 id="where-title" class="ws-small-h">Where</h2>
+            <div class="ws-map"><!--walc-map--><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1000" role="img" aria-labelledby="walc-t">
+<title id="walc-t">Street map of central Purdue campus with the Wilmeth Active Learning Center marked</title>
+<path class="wm-streets" d="M993.2 880.6 993.3 1000M833.2 886.6 833.9 1000M1266.2 1000 1279.7 978.3 1294.5 973.9 1335.6 1000M705.5 868.1 702 877.4 701.3 1000M518.9 873 516 1000M1091.3 885.6 1092.5 1000M1350.8 1000 1280.6 954.2 1167.1 888.1 928.8 878.4 908.3 882.2 840.9 882.5 833.2 886.6M1267.2 947.5 1273 961.8 1266 1000M1350.8 1000 1280.6 954.2 1167.1 888.1 993.2 880.6M1200.1 906.5 1201 897.5 1206.9 892.1M1394 893.5 1206.9 892.1 1198.5 889.9 1192.6 881.8M246.6 861.4 243.2 890.6 221.2 924.4 214.2 943.6 212.4 1000M27.2 854.8 24.8 1000M27.2 854.8 24.8 1000M993.2 880.6 928.8 878.4 908.3 882.2 840.9 882.5 833.2 886.6 817 880.5 360.1 869 350.6 865.1 0 854.1M156.2 858.1 160.7 830.9 160.6 786.7 156.5 763.7 147.8 744.4M1167.1 888.1 1184.3 888.3 1192.6 881.8M1431.4 1000 1487.7 835 1500 780.6M1392.9 792.3 1193.9 788.4M1091.3 885.6 1091.8 684.1M1192.6 881.8 1194.2 729.8 1191.8 692 1093.3 572.5M1391.9 692.6 991.9 681.9M1280.6 954.2 1284.4 699.7 1281.1 679.9 1278.5 347.8M1093.3 572.5 1106.3 579.8 1123.1 583.8 1391 591.4 1435.5 594.4 1500 606.8M1035.5 502.3 1093.3 572.5 1115.8 582.8 1391 591.4 1435.5 594.4 1500 606.8M1500 563.9 1425.3 522.3 1390 508.6 1345.8 496.7 1268.6 486.5 1073.8 481.9M833.2 886.6 833.9 1000M455.5 753 499.7 755.3 501.4 797.6 503.9 801.2 513.8 803.5M607.6 875 607.4 702 613.8 685.9 631 669.5 649.6 663.9 993.5 658.6M705.5 868.1 703.9 810.6 709.6 787.1 709.2 734.2 702.7 713.3 701.1 663.5M701.1 663.5 696.9 677.4 698.2 867.9M701.1 663.5 702.6 573.2M702.6 573.2 705.2 452.5M596.2 497.6 574.9 512 540.8 503.1 509.6 520.3 467.7 512.7 454.2 525.4M456.3 871.6 451.9 67.1M705.2 452.5 735.4 458.2 783.7 461.2 803.7 456 843.2 434.4M27.2 854.8 23.1 799.2 0 733M0 519.8 22 472.7 30.4 431.7 41.6 0M27.2 854.8 23.1 799.2 0 733M0 519.8 22 472.7 30.4 431.7 41.6 0M453.3 299.6 243.7 294.4M3.5 512.2 22 472.7 30.4 431.7 40 56.9M180.3 60.1 182.5 349.5M452.4 191 243 185.2M985.6 70 711.1 64.4 570.8 70.1 0 55.9M171.3 0 197.1 60.7M1073.8 481.9 1268.6 486.5 1345.8 496.7 1390 508.6 1425.3 522.3 1500 563.9M1035.5 502.3 1033.4 493.9 1037.3 487.5 1073.8 481.9M1177.3 389.1 1047.3 389.8M1114.3 389 1112 343.6 1075.2 340.8M1388.2 349.6 1177 345.5M1075.2 340.8 987.3 339.1M1387.1 239.4 986.7 232.1M1386.2 129.8 986.1 121.6M1180.2 676.1 1177.6 125.1 1174.4 0M1175.2 22.8 984.1 19.6M532.7 303.5 453.3 299.6M986.4 211.7 885.7 211.4M681.1 346.3 657.2 315.6 649.9 314.2 529.3 167.8 451.9 67.1M631.2 16.2 636.6 32.5 635.1 46.1 631.1 53.8 611.5 69.8M885.7 211.4 883 0M784.8 107.7 782.6 0M700.5 65 698.8 0M1392.9 792.3 1500 792M1391 591.4 1500 623.5M1482.1 535.9 1485.3 527.9 1484.8 468.3M1389.5 466.8 1500 469.2M1388.2 349.6 1500 351.6M1497 469 1495.7 131M1386.2 129.8 1500 131.1M76 856 68.8 820.1 69.9 777.2 77.1 759.3 95 743.1M27.2 854.8 23.1 799.2 3.8 740.5M455.5 753 0 740.3M3.8 740.5 0 733M455.1 637.8 93.6 629M454.2 525.4 205.1 517.6M205.1 517.6 0 512.1M350.6 865.1 345.7 64.5M246.6 861.4 241 62M453.8 410.7 244.6 404.9M0 854.1 350.6 865.1 360.1 869 817 880.5 833.2 886.6M993.2 880.6 993.5 658.6 987.4 391 983.5 0M1281.3 126.8 1278.9 0M451.9 67.1 453.3 0M241 62 240.4 0M240.9 54.9 240.4 0M1073.8 481.9 1052 480.6 1030.3 472.7 988.6 433.6 629.7 0M1093.3 572.5 790.3 209.8 738.5 142.8 619.7 0M1394.9 1000 1383.3 0M619.7 0 738.5 142.8 790.3 209.8 1035.5 502.3M1073.8 481.9 1052 480.6 1030.3 472.7 988.6 433.6 629.7 0M1383.9 26.6 1500 27.4"/>
+<circle class="wm-halo" cx="750.0" cy="500.0" r="70"/>
+<circle class="wm-dot" cx="750.0" cy="500.0" r="26"/>
+<text class="wm-label" x="845.0" y="522.0">WALC</text>
+<g class="wm-scale" transform="translate(40 960)"><rect width="100" height="16"/><rect class="b" x="100" width="100" height="16"/><text x="0" y="-14">0</text><text x="200" y="-14" text-anchor="middle">200 m</text></g>
+<g class="wm-north" transform="translate(1440 70)"><path d="M0 -40 L18 20 L0 8 L-18 20 Z"/><text y="52" text-anchor="middle">N</text></g>
+</svg><!--/walc-map--></div>
+            <p>Wilmeth Active Learning Center (WALC)<br>340 Centennial Mall Dr, West Lafayette, IN 47907</p>
+            <a class="ws-osm" href="https://www.openstreetmap.org/?mlat=40.42745&amp;mlon=-86.91320#map=17/40.42745/-86.91320" target="_blank" rel="noopener">Open in OpenStreetMap</a>
+          </aside>
         </section>
 
-        <!-- SCHEDULE -->
-        <div class="schedule">
-
-            <!-- DAY 1 -->
-            <div class="day-block">
-                <div class="day-label"><span class="dot"></span> Day 1</div>
-
-                <a class="setup-card" href="https://spatialturn.github.io/Workshop2026-FirstSteps/" target="_blank">
-                    <div class="icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
-                    </div>
-                    <div>
-                        <h3>First Steps</h3>
-                        <p>Install QGIS, set up Jupyter Notebooks, and review the workshop schedule.</p>
-                    </div>
-                </a>
-
-                <div class="fork-section">
-                    <div class="fork-label">
-                        <span>Choose your track</span>
-                    </div>
-                    <div class="tracks">
-                        <!-- Track A -->
-                        <div class="track track--a">
-                            <div class="track-header">
-                                <div class="track-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 3v18"/></svg>
-                                </div>
-                                <div class="track-header-text">
-                                    <h3>Session A — Working with GIS Data in QGIS</h3>
-                                    <p>3 sessions · QGIS &amp; remote sensing</p>
-                                </div>
-                            </div>
-                            <div class="track-sessions">
-                                <a class="session-card" href="https://spatialturn.github.io/Workshop2026-Session1A/" target="_blank">
-                                    <div class="session-tag">Session 1A</div>
-                                    <h4>Working &amp; Teaching with QGIS</h4>
-                                    <p>Introduction to the QGIS interface, loading data, and basic cartography.</p>
-                                </a>
-                                <a class="session-card" href="https://spatialturn.github.io/Workshop2026-Session2A/" target="_blank">
-                                    <div class="session-tag">Session 2A</div>
-                                    <h4>Raster Data &amp; Remote Sensing</h4>
-                                    <p>Working with raster datasets and remote sensing tools in QGIS.</p>
-                                </a>
-                                <a class="session-card" href="https://spatialturn.github.io/Workshop2026-Session3A/" target="_blank">
-                                    <div class="session-tag">Session 3A</div>
-                                    <h4>Satellite Imagery Analysis</h4>
-                                    <p>Analysis and visualization techniques with satellite imagery.</p>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Track B -->
-                        <div class="track track--b">
-                            <div class="track-header">
-                                <div class="track-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                                </div>
-                                <div class="track-header-text">
-                                    <h3>Session B — Python in GIS</h3>
-                                    <p>1 extended session · coding-heavy</p>
-                                </div>
-                            </div>
-                            <div class="track-sessions">
-                                <a class="session-card" href="https://spatialturn.github.io/Workshop2026-SessionB/" target="_blank">
-                                    <div class="session-tag">Session B</div>
-                                    <h4>Geospatial Python</h4>
-                                    <p>Hands-on spatial analysis and automation using Python, Jupyter Notebooks, and geospatial libraries.</p>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <section class="ws-schedule" aria-label="Schedule">
+          <div class="ws-day">
+            <h2>Day 1</h2>
+            <ul class="tiles">
+              <li class="span"><a href="https://spatialturn.github.io/Workshop2026-FirstSteps/" target="_blank" rel="noopener"><span class="num">1</span><span><b>First Steps <em>Everyone</em></b>Install QGIS, set up Jupyter Notebooks, and review the workshop schedule.</span></a></li>
+            </ul>
+            <p class="ws-fork">Then choose a track</p>
+            <div class="ws-tracks">
+              <div class="ws-track">
+                <h3>Track A: Working with GIS Data in QGIS <span>· 3 sessions</span></h3>
+                <ul class="tiles">
+                  <li><a href="https://spatialturn.github.io/Workshop2026-Session1A/" target="_blank" rel="noopener"><span class="num">1A</span><span><b>Working and Teaching with QGIS</b>Introduction to the QGIS interface, loading data, and basic cartography.</span></a></li>
+                  <li><a href="https://spatialturn.github.io/Workshop2026-Session2A/" target="_blank" rel="noopener"><span class="num">2A</span><span><b>Raster Data and Remote Sensing</b>Working with raster datasets and remote sensing tools in QGIS.</span></a></li>
+                  <li><a href="https://spatialturn.github.io/Workshop2026-Session3A/" target="_blank" rel="noopener"><span class="num">3A</span><span><b>Satellite Imagery Analysis</b>Analysis and visualization techniques with satellite imagery.</span></a></li>
+                </ul>
+              </div>
+              <div class="ws-track ws-track-b">
+                <h3>Track B: Geospatial Python <span>· 1 extended session</span></h3>
+                <ul class="tiles">
+                  <li><a href="https://spatialturn.github.io/Workshop2026-SessionB/prelunch.html" target="_blank" rel="noopener"><span class="num">B1</span><span><b>Python Notebook Introduction</b>Notebooks in Google Colab and the core libraries: NumPy, pandas and Matplotlib.</span></a></li>
+                  <li><a href="https://spatialturn.github.io/Workshop2026-SessionB/midlunch.html" target="_blank" rel="noopener"><span class="num">B2</span><span><b>Acquiring and Exploring Census Data</b>TIGER/Line shapefiles, the Decennial Census and the ACS, through the Census API.</span></a></li>
+                  <li><a href="https://spatialturn.github.io/Workshop2026-SessionB/postlunch.html" target="_blank" rel="noopener"><span class="num">B3</span><span><b>Census Data Analysis with Python</b>Cleaning, sorting and summarizing a Census dataset in a notebook.</span></a></li>
+                </ul>
+              </div>
             </div>
+          </div>
+          <div class="ws-day">
+            <h2>Day 2</h2>
+            <ul class="tiles">
+              <li class="span"><a href="https://spatialturn.github.io/Workshop2026-LookingAhead/" target="_blank" rel="noopener"><span class="num">2</span><span><b>Putting it all Together: Designing and Building Geospatial Teaching Modules <em>Everyone</em></b>Geospatial data types, metadata standards, data management across disciplines, and best practices for sharing and preserving spatial datasets.</span></a></li>
+            </ul>
+          </div>
+        </section>
 
-            <!-- DAY 2 -->
-            <div class="day-block">
-                <div class="day-label"><span class="dot"></span> Day 2</div>
-
-                <a class="day2-card" href="https://spatialturn.github.io/Workshop2026-LookingAhead/" target="_blank">
-                    <div class="icon-box">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    </div>
-                    <div>
-                        <h3>Putting it all Together: Designing and Building Geospatial Teaching Modules</h3>
-                        <p>Geospatial data types, metadata standards, data management across disciplines, and best practices for sharing and preserving spatial datasets.</p>
-                        <span class="all-attend">All participants</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <!-- MAP -->
-        <div class="map-section">
-            <div class="map-label">Workshop location</div>
-            <p style="color:var(--text-body); font-size:0.95rem; margin-bottom:14px;">Wilmeth Active Learning Center (WALC) · 340 Centennial Mall Dr, West Lafayette, IN 47907</p>
-            <div id="map"></div>
-        </div>
+        <section class="ws-credits" aria-label="About this project">
+          <p class="tb-title">Enabling the Geospatial Turn in the Social Sciences</p>
+          <div class="logos">
+            <a class="logo-purdue" href="https://www.purdue.edu/" target="_blank" rel="noopener" aria-label="Purdue University website">
+              <img class="on-dark" src="assets/purdue-logo-dark-bg.svg" alt="Purdue University" width="168" height="30">
+              <img class="on-light" src="assets/purdue-logo-light-bg.svg" alt="Purdue University" width="168" height="30">
+            </a>
+            <a class="logo-nsf" href="https://www.nsf.gov/" target="_blank" rel="noopener" aria-label="U.S. National Science Foundation website">
+              <img src="assets/nsf-logo.png" alt="U.S. National Science Foundation" width="56" height="56">
+            </a>
+          </div>
+          <p class="small">Supported by the U.S. National Science Foundation.<br>Contact: <a href="mailto:ilindsay@purdue.edu">ilindsay@purdue.edu</a></p>
+        </section>
+      </main>
 
     </div>
+  </div>
 
-    <!-- FOOTER -->
-    <footer>
-        <p>&copy; 2025 Geospatial Training Tutorials · <a href="mailto:ilindsay@purdue.edu">Contact</a></p>
-        <p style="margin-top:6px;">This site does not collect, store, or share any personal information.</p>
-    </footer>
+  <footer class="collar collar-bottom">
+    <span aria-hidden="true">Workshop 2026</span>
+    <span class="privacy">This site does not collect or store any personal information.</span>
+    <span aria-hidden="true">UTM zone 16N · NAD83</span>
+  </footer>
+</div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        var map = L.map('map', { scrollWheelZoom: false }).setView([40.42745, -86.91320], 16);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · <a href="https://carto.com/">CARTO</a>'
-        }).addTo(map);
-
-        var walcIcon = L.divIcon({
-            className: '',
-            html: '<div style="width:14px;height:14px;background:#2dd4bf;border:3px solid #0c1221;border-radius:50%;box-shadow:0 0 10px rgba(45,212,191,0.5);"></div>',
-            iconSize: [14, 14],
-            iconAnchor: [7, 7],
-            popupAnchor: [0, -10]
-        });
-
-        L.marker([40.42745, -86.91320], { icon: walcIcon }).addTo(map)
-            .bindPopup('<div style="font-family:Inter,sans-serif;font-size:13px;line-height:1.5;color:#e2e8f0;"><strong>WALC</strong><br>Wilmeth Active Learning Center<br><span style="color:#94a3b8;">340 Centennial Mall Dr</span></div>', {
-                className: 'dark-popup'
-            })
-            .openPopup();
-    </script>
-    <script>
-        document.querySelectorAll('.site-nav a:not(.active)').forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                var href = this.href;
-                var content = document.querySelector('.page-content');
-                content.classList.add('leaving');
-                content.addEventListener('animationend', function() {
-                    window.location.href = href;
-                }, { once: true });
-            });
-        });
-    </script>
+<script src="assets/site.js" defer></script>
 </body>
 </html>

@@ -162,3 +162,58 @@ h2 { margin: 0 0 14px; font-weight: 600; font-size: 21px; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
   .js .hm-contours path { stroke-dasharray: none; stroke-dashoffset: 0; }
 }
+
+/* ---- Workshop 2026 page ---- */
+.tiles { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 15px; line-height: 1.4; }
+.tiles li { display: flex; flex: 1 1 auto; }
+.tiles a { flex: 1 1 auto; display: flex; gap: 12px; padding: 12px 14px; color: var(--ink); text-decoration: none; border: 1px solid color-mix(in srgb, var(--rule) 45%, transparent); transition: border-color .15s, background-color .15s; }
+.tiles a:hover, .tiles a:focus-visible { border-color: var(--accent); background: var(--hover); outline: none; }
+.tiles a span:last-child { color: var(--muted); }
+.tiles a:hover span:last-child, .tiles a:focus-visible span:last-child { color: var(--ink); }
+.tiles .num { width: 30px; }
+.tiles b { display: block; font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-size: 20px; font-weight: 600; color: var(--ink); }
+.tiles em { font-family: "Barlow Condensed", sans-serif; font-style: normal; font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-left: 10px; white-space: nowrap; }
+.tiles .span a { border-color: var(--rule); }
+
+.ws-hero { display: flex; gap: 48px; align-items: flex-start; padding: 44px 32px 36px; border-bottom: 1px solid var(--rule); }
+.ws-intro { flex: 1 1 auto; max-width: 660px; }
+.ws-intro h1 { font-size: clamp(40px, 5vw, 62px); }
+.ws-intro .lede { margin-bottom: 0; }
+.ws-where { flex: 0 0 340px; margin-left: auto; display: flex; flex-direction: column; gap: 10px; font-size: 14px; line-height: 1.5; }
+.ws-where p { margin: 0; }
+.ws-small-h { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.ws-map { border: 1px solid var(--rule); background: var(--bg); line-height: 0; }
+.ws-map img, .ws-map svg { width: 100%; height: auto; display: block; }
+.ws-osm { font-family: "Barlow Condensed", sans-serif; font-size: 17px; }
+.wm-streets { fill: none; stroke: var(--street); stroke-opacity: .5; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+.wm-halo { fill: var(--accent); fill-opacity: .22; }
+.wm-dot { fill: var(--accent); stroke: var(--paper); stroke-width: 10; }
+.wm-label { font-family: "Barlow Condensed", sans-serif; font-size: 64px; font-weight: 600; fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 16px; }
+.wm-scale rect { fill: var(--ink); stroke: var(--ink); stroke-width: 3; } .wm-scale rect.b { fill: var(--bg); }
+.wm-scale text, .wm-north text { font-family: "Barlow Condensed", sans-serif; font-size: 50px; fill: var(--muted); }
+.wm-north path { fill: var(--ink); }
+
+.ws-schedule { padding: 26px 32px 32px; display: flex; flex-direction: column; gap: 26px; }
+.ws-day h2 { margin-bottom: 12px; font-size: 24px; }
+.ws-fork { margin: 18px 0 10px; font-family: "Barlow Condensed", sans-serif; font-size: 15px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.ws-tracks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; }
+.ws-track { display: flex; flex-direction: column; }
+.ws-track h3 { margin: 0 0 10px; font-family: "Barlow Condensed", sans-serif; font-size: 19px; font-weight: 600; }
+.ws-track h3 span { color: var(--muted); font-weight: 500; }
+.ws-track .tiles { flex: 1 1 auto; }
+.ws-track-b .num { color: #7FB2D9; }
+:root[data-theme="light"] .ws-track-b .num { color: var(--water); }
+
+.ws-credits { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px; padding: 20px 32px; border-top: 1px solid var(--rule); font-size: 14px; }
+.ws-credits p { margin: 0; }
+.ws-credits .tb-title { flex: 1 1 260px; max-width: 360px; }
+
+@media (max-width: 900px) {
+  .ws-hero { flex-direction: column; gap: 28px; }
+  .ws-where { flex-basis: auto; width: 100%; max-width: 440px; margin-left: 0; }
+  .ws-tracks { grid-template-columns: 1fr; gap: 22px; }
+}
+@media (max-width: 640px) {
+  .ws-hero, .ws-schedule, .ws-credits { padding-left: 18px; padding-right: 18px; }
+  .tiles em { display: block; margin: 2px 0 0; }
+}

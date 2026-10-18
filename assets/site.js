@@ -77,7 +77,7 @@
       } else go();
     } else holder.classList.add("drawn");
 
-    /* street lens and coordinate readout follow the pointer */
+    /* coordinate readout follows the pointer; the street lens stays fixed on Purdue */
     var frame = null;
     function move(e) {
       var cx = e.clientX, cy = e.clientY;
@@ -85,13 +85,14 @@
       frame = requestAnimationFrame(function () {
         frame = null;
         var p = toMap(cx, cy); if (!p) return;
-        dot.setAttribute("cx", p.x.toFixed(0)); dot.setAttribute("cy", p.y.toFixed(0));
+        /* Street lens follow-the-cursor is switched off for now (October 2026). To turn it back on, uncomment:
+        dot.setAttribute("cx", p.x.toFixed(0)); dot.setAttribute("cy", p.y.toFixed(0)); */
         var g = ll(p);
         if (readout) readout.textContent = "Cursor " + dms(g[0], "N", "S") + ", " + dms(g[1], "E", "W");
       });
     }
     function leave() {
-      dot.setAttribute("cx", home[0]); dot.setAttribute("cy", home[1]);
+      /* dot.setAttribute("cx", home[0]); dot.setAttribute("cy", home[1]); (lens stays at Purdue) */
       if (readout) readout.textContent = "UTM zone 16N · NAD83";
     }
     svg.addEventListener("pointermove", move);
