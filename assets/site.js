@@ -1,4 +1,5 @@
-/* SpatialTurn homepage: theme switch, hero map (contour draw, street lens, cursor coordinates) and a true scale bar. */
+/* SpatialTurn homepage: theme switch, hero map (contour draw, street lens, cursor coordinates), a true scale bar,
+   and the "View by tool" switch (All modules, Python path, QGIS path) built from assets/paths.json. */
 (function () {
   "use strict";
   var root = document.documentElement;
@@ -125,4 +126,126 @@
     layout();
     var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(layout, 120); });
   }).catch(function () { /* the static image stays in place */ });
+})();
+
+/* ---------- View by tool: All modules / Python path / QGIS path ----------
+   Episode data comes from assets/paths.json (written by SpatialTurn_build_scripts/utils/homepage_paths.py).
+   The choice is kept in the address (#python, #qgis) so it can be shared, and remembered on this device only. */
+(function () {
+  "use strict";
+  var sw = document.querySelector(".tool-switch");
+  var list = document.querySelector(".modules");
+  if (!sw || !list || !window.fetch) return;
+
+  var VIEWS = ["all", "python", "qgis"];
+  var LABEL = { python: "Python", qgis: "QGIS", theory: "Theory", both: "Py + QGIS" };
+  var HERO = {
+    all: { btn: "Start with Foundations", href: "https://spatialturn.github.io/Foundations/" },
+    python: { btn: "Start with Python Basics", href: "https://spatialturn.github.io/Foundations/python-basics.html" },
+    qgis: { btn: "Start with your first QGIS map", href: "https://spatialturn.github.io/Foundations/qgisintro.html" }
+  };
+  var LEDE = {
+    python: "The Python path: every episode with a notebook, plus the shared theory episodes, in the order a project uses them.",
+    qgis: "The QGIS path: every desktop GIS exercise, including the Workshop 2026 Track A sessions, plus the shared theory episodes."
+  };
+  var title = document.getElementById("legend-title"), summary = document.getElementById("legend-summary");
+  var key = document.querySelector(".tool-key"), lede = document.getElementById("lede"), start = document.getElementById("start-btn");
+  var orig = { title: title.textContent, lede: lede ? lede.textContent : "" };
+  var data = null;
+
+  function fmt(m) { return m >= 60 ? Math.floor(m / 60) + " h" + (m % 60 ? " " + (m % 60) : "") : m + " min"; }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function inPath(e, view) { return view === "all" || e.tag === "theory" || e.tag === "both" || e.tag === view; }
+
+  function render(view) {
+    var total = 0, mins = 0, shared = 0, all = 0;
+    data.modules.forEach(function (m) {
+      var li = list.querySelector('[data-module="' + m.repo + '"]'); if (!li) return;
+      var desc = li.querySelector(".desc");
+      if (!desc.hasAttribute("data-desc")) desc.setAttribute("data-desc", desc.textContent);
+      var old = li.querySelectorAll(".chips, .eps"); for (var i = 0; i < old.length; i++) li.removeChild(old[i]);
+      var own = m.episodes.filter(function (e) { return !e.ws; });
+      all += own.length;
+      if (view === "all") {
+        desc.textContent = desc.getAttribute("data-desc");
+        var counts = {}, ws = 0;
+        m.episodes.forEach(function (e) { if (e.ws) ws++; else counts[e.tag] = (counts[e.tag] || 0) + 1; });
+        var chips = el("div", "chips");
+        [["python", "Python"], ["qgis", "QGIS"], ["both", "Python + QGIS"], ["theory", "Theory"]].forEach(function (t) {
+          if (counts[t[0]]) chips.appendChild(el("span", "chip chip-" + t[0], counts[t[0]] + " " + t[1]));
+        });
+        if (ws) chips.appendChild(el("span", "chip chip-ws", "+" + ws + " Workshop QGIS"));
+        li.appendChild(chips);
+        return;
+      }
+      var eps = m.episodes.filter(function (e) { return inPath(e, view); });
+      var sum = eps.reduce(function (s, e) { return s + e.mins; }, 0);
+      total += eps.length; mins += sum; shared += eps.filter(function (e) { return e.tag === "theory"; }).length;
+      desc.textContent = eps.length + (eps.length === 1 ? " episode" : " episodes") + " · about " + fmt(sum);
+      var ul = el("ul", "eps");
+      eps.forEach(function (e) {
+        var item = el("li", e.tag), a = el("a");
+        a.href = e.url; a.target = "_blank"; a.rel = "noopener";
+        var t = el("span", "ep-title", e.title);
+        if (e.ws) t.appendChild(el("span", "ws-tag", e.ws));
+        a.appendChild(t);
+        a.appendChild(el("span", "chip chip-" + e.tag, LABEL[e.tag]));
+        a.appendChild(el("span", "ep-mins", fmt(e.mins)));
+        a.setAttribute("aria-label", e.title + (e.ws ? ", " + e.ws : "") + ", " + LABEL[e.tag] + ", " + fmt(e.mins));
+        item.appendChild(a); ul.appendChild(item);
+      });
+      li.appendChild(ul);
+    });
+
+    if (view === "all") {
+      title.textContent = orig.title;
+      summary.textContent = data.modules.length + " modules · " + all + " episodes";
+      if (lede) lede.textContent = orig.lede;
+    } else {
+      title.textContent = (view === "python" ? "Python path" : "QGIS path") + ": episodes by module";
+      summary.textContent = total + " episodes · about " + Math.round(mins / 60) + " hours · " + shared + " shared theory episodes";
+      if (lede) lede.textContent = LEDE[view];
+    }
+    key.hidden = view === "all";
+    var wsKey = key.querySelector(".key-ws"); if (wsKey) wsKey.hidden = view !== "qgis";
+    if (start) { start.textContent = HERO[view].btn; start.href = HERO[view].href; }
+    var bs = sw.querySelectorAll("button");
+    for (var j = 0; j < bs.length; j++) {
+      var on = bs[j].getAttribute("data-view") === view;
+      bs[j].setAttribute("aria-checked", on ? "true" : "false");
+      bs[j].tabIndex = on ? 0 : -1;
+    }
+  }
+
+  function setView(view, push) {
+    render(view);
+    try { localStorage.setItem("st-view", view); } catch (e) {}
+    if (push && window.history && history.replaceState) {
+      history.replaceState(null, "", view === "all" ? location.pathname + location.search : "#" + view);
+    }
+  }
+
+  function initial() {
+    var h = location.hash.replace("#", "");
+    if (VIEWS.indexOf(h) > 0) return h;
+    try { var v = localStorage.getItem("st-view"); if (VIEWS.indexOf(v) >= 0) return v; } catch (e) {}
+    return "all";
+  }
+
+  fetch("assets/paths.json").then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
+    data = d;
+    sw.hidden = false;
+    sw.addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-view]"); if (b) setView(b.getAttribute("data-view"), true);
+    });
+    sw.addEventListener("keydown", function (e) {
+      if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].indexOf(e.key) < 0) return;
+      var bs = sw.querySelectorAll("button"), cur = 0;
+      for (var i = 0; i < bs.length; i++) if (bs[i].getAttribute("aria-checked") === "true") cur = i;
+      var next = (cur + (e.key === "ArrowLeft" || e.key === "ArrowUp" ? bs.length - 1 : 1)) % bs.length;
+      setView(bs[next].getAttribute("data-view"), true); bs[next].focus(); e.preventDefault();
+    });
+    window.addEventListener("hashchange", function () { var h = location.hash.replace("#", ""); if (VIEWS.indexOf(h) > 0) setView(h, false); });
+    setView(initial(), false);
+  }).catch(function () { /* without the data file the page stays on the plain module legend */ });
 })();

@@ -20,6 +20,8 @@
   --accent-ink: #0F1A1F;
   --hover: rgba(207, 185, 145, 0.10);
   --panel: rgba(15, 26, 31, 0.86);
+  --py: #7DB3E0;
+  --qgis: #E8A25C;
 }
 :root[data-theme="light"] {
   --bg: #E9EBE4;
@@ -35,6 +37,8 @@
   --accent-ink: #F6F7F2;
   --hover: rgba(142, 111, 62, 0.10);
   --panel: rgba(246, 247, 242, 0.88);
+  --py: #2B6795;
+  --qgis: #A4570F;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -108,24 +112,59 @@ h1 { margin: 0 0 20px; font-weight: 600; font-size: clamp(46px, 6.4vw, 78px); li
 .js .drawn .hm-major path { animation-duration: 3s; }
 @keyframes draw { to { stroke-dashoffset: 0; } }
 
-/* ---- legend + title block ---- */
-.legend-row { position: relative; z-index: 2; display: flex; border-top: 1px solid var(--rule); background: var(--paper); }
-.legend { flex: 1 1 auto; padding: 22px 32px 28px; border-right: 1px solid var(--rule); }
-h2 { margin: 0 0 14px; font-weight: 600; font-size: 21px; }
-.modules { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto repeat(3, auto); grid-auto-flow: column; gap: 8px 20px; font-size: 15px; line-height: 1.35; }
+/* ---- header: view-by-tool switch ---- */
+.tool-switch { display: flex; align-items: center; }
+.tool-switch[hidden] { display: none; }
+.ts-label { font-size: 14px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-right: 12px; }
+.tool-switch button { font: inherit; font-size: 17px; font-weight: 600; color: var(--ink); background: transparent; border: 1px solid var(--accent); margin-left: -1px; padding: 5px 14px; min-height: 36px; cursor: pointer; transition: background-color .15s, color .15s; }
+.tool-switch button:hover { background: var(--hover); }
+.tool-switch button[aria-checked="true"] { background: var(--accent); color: var(--accent-ink); }
+
+/* ---- legend (modules) ---- */
+.legend-row { position: relative; z-index: 2; border-top: 1px solid var(--rule); background: var(--paper); }
+.legend { padding: 26px 32px 30px; }
+.legend-head { text-align: center; margin-bottom: 18px; }
+h2 { margin: 0 0 4px; font-weight: 600; font-size: 23px; }
+.legend-summary { margin: 0; font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-size: 17px; color: var(--muted); }
+.tool-key { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; font-size: 14px; color: var(--muted); }
+.tool-key[hidden] { display: none; }
+.tool-key li { display: flex; align-items: center; gap: 7px; }
+.tool-key li[hidden] { display: none; }
+.chip { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; border: 1px solid currentColor; padding: 1px 6px; line-height: 1.4; white-space: nowrap; text-align: center; }
+.chip-python { color: var(--py); } .chip-qgis { color: var(--qgis); } .chip-theory { color: var(--muted); } .chip-both { color: var(--accent); } .chip-ws { color: var(--accent); }
+.ws-tag { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+
+/* Foundations across the top, then pairs (2|5, 3|6, 4|7) that share one row height */
+.modules { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto repeat(3, auto); grid-auto-flow: column; gap: 12px 20px; font-size: 15px; line-height: 1.35; }
+.modules > li { border: 1px solid var(--rule); padding: 12px 14px; transition: border-color .15s; min-width: 0; }
+.modules > li:hover, .modules > li:focus-within { border-color: var(--accent); }
 .modules .span { grid-column: 1 / -1; }
-.modules .span a { border-color: var(--rule); }
+.tilehead { display: flex; gap: 12px; color: var(--ink); text-decoration: none; }
+.tilehead:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.tilehead:hover b { color: var(--accent); }
+.modules .span .tilehead { justify-content: center; text-align: center; }
+.modules .span .num { width: auto; margin-right: 8px; }
 .modules em { font-style: normal; font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-left: 10px; }
-.modules a { display: flex; gap: 12px; padding: 10px 12px; color: var(--ink); text-decoration: none; border: 1px solid color-mix(in srgb, var(--rule) 45%, transparent); transition: border-color .15s, background-color .15s; height: 100%; }
-.modules a:hover, .modules a:focus-visible { border-color: var(--accent); background: var(--hover); outline: none; }
-.modules a span:last-child { color: var(--muted); }
-.modules a:hover span:last-child, .modules a:focus-visible span:last-child { color: var(--ink); }
+.desc { color: var(--muted); }
 .num { font-weight: 700; font-size: 19px; width: 20px; flex-shrink: 0; color: var(--accent); }
-.modules b { display: block; font-size: 19px; font-weight: 600; color: var(--ink); }
-.title-block { width: 310px; flex-shrink: 0; padding: 22px 26px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; line-height: 1.45; }
+.modules b { display: block; font-size: 19px; font-weight: 600; color: var(--ink); transition: color .15s; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0 32px; }
+.span .chips { justify-content: center; margin-left: 0; }
+.eps { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.span .eps { max-width: 590px; margin-left: auto; margin-right: auto; }
+.eps a { display: grid; grid-template-columns: minmax(0, 1fr) 84px 54px; align-items: center; gap: 12px; padding: 6px 8px; min-height: 38px; color: var(--ink); text-decoration: none; border: 1px solid transparent; transition: border-color .15s, background-color .15s; }
+.eps a:hover, .eps a:focus-visible { border-color: var(--accent); background: var(--hover); outline: none; }
+.eps .theory a { color: var(--muted); }
+.eps .theory a:hover, .eps .theory a:focus-visible { color: var(--ink); }
+.ep-title .ws-tag { margin-left: 8px; }
+.ep-mins { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-size: 15px; color: var(--muted); text-align: right; white-space: nowrap; }
+
+/* ---- title block: a full-width strip in three parts ---- */
+.title-block { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; gap: 20px; padding: 20px 32px; border-top: 1px solid var(--rule); background: var(--paper); font-size: 14px; line-height: 1.45; }
 .title-block p { margin: 0; }
 .tb-title { font-weight: 700; font-size: 21px; line-height: 1.1; }
-.logos { display: flex; align-items: center; gap: 18px; padding: 6px 0; }
+.tb-text { text-align: right; }
+.logos { display: flex; align-items: center; justify-content: center; gap: 18px; }
 .logos a { display: block; line-height: 0; }
 .logos a:hover { opacity: .85; }
 .logo-purdue img { width: 168px; height: auto; }
@@ -139,9 +178,10 @@ h2 { margin: 0 0 14px; font-weight: 600; font-size: 21px; }
 
 /* ---- narrow screens ---- */
 @media (max-width: 900px) {
-  .legend-row { flex-direction: column; }
-  .legend { border-right: 0; border-bottom: 1px solid var(--rule); }
-  .title-block { width: auto; }
+  .site-header { flex-wrap: wrap; }
+  nav { flex-wrap: wrap; }
+  .title-block { grid-template-columns: 1fr; text-align: center; }
+  .tb-text { text-align: center; }
   .hero-map { width: 100%; opacity: .7; }
   .hero-map::after { display: none; }
 }
@@ -151,6 +191,11 @@ h2 { margin: 0 0 14px; font-weight: 600; font-size: 21px; }
   .hero { min-height: 0; padding-top: 40px; padding-bottom: 88px; }
   .hero-text { padding: 16px; box-shadow: none; }
   .modules { grid-template-columns: 1fr; grid-auto-flow: row; grid-template-rows: none; }
+  .ts-label { display: none; }
+  .tool-switch { width: 100%; }
+  .tool-switch button { flex: 1 1 0; padding: 5px 6px; font-size: 16px; }
+  .chips { margin-left: 0; }
+  .eps a { grid-template-columns: minmax(0, 1fr) 70px 46px; gap: 8px; padding: 6px 4px; }
   .hero { padding-bottom: 130px; }
   .collar-top span:last-child, #cursor-readout { display: none; }
   .map-caption { left: 18px; right: 18px; text-align: left; }

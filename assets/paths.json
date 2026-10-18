@@ -1,0 +1,291 @@
+{
+ "modules": [
+  {
+   "repo": "Foundations",
+   "episodes": [
+    {
+     "title": "Introduction to Foundations",
+     "url": "https://spatialturn.github.io/Foundations/introduction.html",
+     "mins": 30,
+     "tag": "theory"
+    },
+    {
+     "title": "Python Basics",
+     "url": "https://spatialturn.github.io/Foundations/python-basics.html",
+     "mins": 150,
+     "tag": "python"
+    },
+    {
+     "title": "Working with Data",
+     "url": "https://spatialturn.github.io/Foundations/working-with-data.html",
+     "mins": 70,
+     "tag": "python"
+    },
+    {
+     "title": "Geospatial Python Basics",
+     "url": "https://spatialturn.github.io/Foundations/geospatial-python.html",
+     "mins": 105,
+     "tag": "python"
+    },
+    {
+     "title": "Getting Started with QGIS: Your First Map",
+     "url": "https://spatialturn.github.io/Foundations/qgisintro.html",
+     "mins": 105,
+     "tag": "qgis"
+    },
+    {
+     "title": "Acquiring Data and Making Your First Map in QGIS",
+     "url": "https://spatialturn.github.io/Workshop2026-Session1A/qgisintro.html",
+     "mins": 90,
+     "tag": "qgis",
+     "ws": "Workshop 1A"
+    }
+   ]
+  },
+  {
+   "repo": "DataManagement",
+   "episodes": [
+    {
+     "title": "Introduction to Data Management",
+     "url": "https://spatialturn.github.io/DataManagement/introduction.html",
+     "mins": 40,
+     "tag": "theory"
+    },
+    {
+     "title": "Geospatial Data Models",
+     "url": "https://spatialturn.github.io/DataManagement/data-models.html",
+     "mins": 45,
+     "tag": "theory"
+    },
+    {
+     "title": "Geospatial File Formats",
+     "url": "https://spatialturn.github.io/DataManagement/file-formats.html",
+     "mins": 45,
+     "tag": "theory"
+    },
+    {
+     "title": "Coordinate Reference Systems",
+     "url": "https://spatialturn.github.io/DataManagement/crs.html",
+     "mins": 45,
+     "tag": "theory"
+    },
+    {
+     "title": "Designing Your Data",
+     "url": "https://spatialturn.github.io/DataManagement/designing-data.html",
+     "mins": 50,
+     "tag": "theory"
+    },
+    {
+     "title": "Organizing, Versioning and Backing Up",
+     "url": "https://spatialturn.github.io/DataManagement/organizing.html",
+     "mins": 45,
+     "tag": "theory"
+    },
+    {
+     "title": "Data Quality",
+     "url": "https://spatialturn.github.io/DataManagement/quality.html",
+     "mins": 45,
+     "tag": "theory"
+    }
+   ]
+  },
+  {
+   "repo": "DataCollection",
+   "episodes": [
+    {
+     "title": "Introduction to Data Collection",
+     "url": "https://spatialturn.github.io/DataCollection/introduction.html",
+     "mins": 35,
+     "tag": "theory"
+    },
+    {
+     "title": "Finding Data in Repositories",
+     "url": "https://spatialturn.github.io/DataCollection/repositories.html",
+     "mins": 35,
+     "tag": "qgis"
+    },
+    {
+     "title": "Acquiring Vector Datasets from Data Repositories",
+     "url": "https://spatialturn.github.io/Workshop2026-Session1A/imageryvector.html",
+     "mins": 30,
+     "tag": "qgis",
+     "ws": "Workshop 1A"
+    },
+    {
+     "title": "Data from the U.S. Census Bureau",
+     "url": "https://spatialturn.github.io/DataCollection/census.html",
+     "mins": 65,
+     "tag": "python"
+    },
+    {
+     "title": "Geocoding and Adding Spatial Context",
+     "url": "https://spatialturn.github.io/DataCollection/geocoding.html",
+     "mins": 70,
+     "tag": "python"
+    },
+    {
+     "title": "Acquiring Imagery: Scanned Maps and Satellite Data",
+     "url": "https://spatialturn.github.io/DataCollection/imagery.html",
+     "mins": 50,
+     "tag": "qgis"
+    },
+    {
+     "title": "Acquiring Raster Data using Imagery Databases",
+     "url": "https://spatialturn.github.io/Workshop2026-Session2A/acquiring-raster-data.html",
+     "mins": 55,
+     "tag": "qgis",
+     "ws": "Workshop 2A"
+    },
+    {
+     "title": "Collecting Data in the Field",
+     "url": "https://spatialturn.github.io/DataCollection/field.html",
+     "mins": 40,
+     "tag": "theory"
+    }
+   ]
+  },
+  {
+   "repo": "DataAnalysis",
+   "episodes": [
+    {
+     "title": "Network Analysis",
+     "url": "https://spatialturn.github.io/DataAnalysis/networkanalysis.html",
+     "mins": 85,
+     "tag": "python"
+    },
+    {
+     "title": "Spatial Autocorrelation with PySAL",
+     "url": "https://spatialturn.github.io/DataAnalysis/pysal.html",
+     "mins": 85,
+     "tag": "python"
+    },
+    {
+     "title": "Spatial Clustering",
+     "url": "https://spatialturn.github.io/DataAnalysis/cluster.html",
+     "mins": 85,
+     "tag": "python"
+    },
+    {
+     "title": "NDVI Analysis",
+     "url": "https://spatialturn.github.io/DataAnalysis/ndvi.html",
+     "mins": 85,
+     "tag": "python"
+    },
+    {
+     "title": "DEM Analysis and Visualization in QGIS",
+     "url": "https://spatialturn.github.io/Workshop2026-Session2A/dem-analysis.html",
+     "mins": 40,
+     "tag": "qgis",
+     "ws": "Workshop 2A"
+    },
+    {
+     "title": "NDVI Analysis with Sentinel-2 Imagery",
+     "url": "https://spatialturn.github.io/Workshop2026-Session3A/ndvi-analysis.html",
+     "mins": 45,
+     "tag": "qgis",
+     "ws": "Workshop 3A"
+    },
+    {
+     "title": "Flood Analysis with False Color Composites and NDWI",
+     "url": "https://spatialturn.github.io/Workshop2026-Session3A/flood-analysis.html",
+     "mins": 45,
+     "tag": "qgis",
+     "ws": "Workshop 3A"
+    }
+   ]
+  },
+  {
+   "repo": "DataVisualization",
+   "episodes": [
+    {
+     "title": "Introduction to Data Visualization",
+     "url": "https://spatialturn.github.io/DataVisualization/introduction.html",
+     "mins": 75,
+     "tag": "python"
+    },
+    {
+     "title": "Cartography Checklists",
+     "url": "https://spatialturn.github.io/DataVisualization/mapvisual.html",
+     "mins": 75,
+     "tag": "theory"
+    },
+    {
+     "title": "Fundamentals of Map Design",
+     "url": "https://spatialturn.github.io/DataVisualization/mapbasics.html",
+     "mins": 105,
+     "tag": "theory"
+    },
+    {
+     "title": "Accessibility in Map Design",
+     "url": "https://spatialturn.github.io/DataVisualization/accessibility.html",
+     "mins": 90,
+     "tag": "both"
+    }
+   ]
+  },
+  {
+   "repo": "DataCuration",
+   "episodes": [
+    {
+     "title": "Introduction to Data Curation",
+     "url": "https://spatialturn.github.io/DataCuration/introduction.html",
+     "mins": 40,
+     "tag": "theory"
+    },
+    {
+     "title": "Metadata",
+     "url": "https://spatialturn.github.io/DataCuration/metadata.html",
+     "mins": 50,
+     "tag": "theory"
+    },
+    {
+     "title": "Documentation",
+     "url": "https://spatialturn.github.io/DataCuration/documentation.html",
+     "mins": 45,
+     "tag": "theory"
+    },
+    {
+     "title": "Preservation",
+     "url": "https://spatialturn.github.io/DataCuration/preservation.html",
+     "mins": 45,
+     "tag": "theory"
+    },
+    {
+     "title": "Sharing and Publishing Data",
+     "url": "https://spatialturn.github.io/DataCuration/sharing.html",
+     "mins": 50,
+     "tag": "theory"
+    },
+    {
+     "title": "Ethics and Sensitive Location Data",
+     "url": "https://spatialturn.github.io/DataCuration/ethics.html",
+     "mins": 50,
+     "tag": "theory"
+    }
+   ]
+  },
+  {
+   "repo": "CaseStudies",
+   "episodes": [
+    {
+     "title": "Case Study: Food Deserts",
+     "url": "https://spatialturn.github.io/CaseStudies/introduction.html",
+     "mins": 105,
+     "tag": "python"
+    },
+    {
+     "title": "Grocery Access Part 1: Mapping Stores with QField",
+     "url": "https://spatialturn.github.io/CaseStudies/grocery-qfield.html",
+     "mins": 45,
+     "tag": "qgis"
+    },
+    {
+     "title": "Grocery Access Part 2: Network Analysis in QGIS",
+     "url": "https://spatialturn.github.io/CaseStudies/grocery-network.html",
+     "mins": 75,
+     "tag": "qgis"
+    }
+   ]
+  }
+ ]
+}
