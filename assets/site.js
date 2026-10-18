@@ -119,7 +119,6 @@
       out.push('<text x="0" y="27">0</text><text x="' + w.toFixed(1) + '" y="27" text-anchor="end">' + lab + '</text>');
       sb.setAttribute("width", Math.ceil(w) + 2); sb.setAttribute("viewBox", "0 0 " + (Math.ceil(w) + 2) + " 30");
       sb.innerHTML = out.join("");
-      sb.parentNode.setAttribute("title", "Scale of the hero map at this window size");
     }
     function layout() { corners(); scalebar(); }
     layout();

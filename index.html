@@ -28,7 +28,6 @@
       <header class="site-header">
         <a class="brand" href="index.html">Geospatial Turn</a>
         <nav aria-label="Main">
-          <a href="#modules">Modules</a>
           <button class="theme-toggle" type="button" aria-pressed="false" aria-label="Switch to light theme">
             <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></svg>
             <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
@@ -47,42 +46,42 @@
             <h1 id="hero-title">Enabling the Geospatial Turn in the Social Sciences</h1>
             <p class="lede">Free, self-paced lessons that follow a research project from the first line of Python to a shared, documented dataset.</p>
             <div class="actions">
-              <a class="btn btn-solid" href="https://spatialturn.github.io/Foundations/">Start with Foundations</a>
-              <a class="btn btn-line" href="workshop2026.html">Workshop 2026</a>
+              <a class="btn btn-solid" href="https://spatialturn.github.io/Foundations/" target="_blank" rel="noopener">Start with Foundations</a>
+              <a class="btn btn-line" href="workshop2026.html" target="_blank" rel="noopener">Workshop 2026</a>
             </div>
           </div>
-          <p class="map-caption">Contours every 5 m around Purdue and the Wabash River, West Lafayette, Indiana. Move over the map to see the streets.</p>
+          <div class="map-caption">
+            <div class="scalebar" aria-hidden="true"><svg id="scalebar" width="200" height="30" viewBox="0 0 200 30"></svg></div>
+            <p>Contours every 5 m around Purdue and the Wabash River, West Lafayette, Indiana. Move over the map to see the streets.</p>
+          </div>
         </section>
 
         <section class="legend-row" id="modules" aria-labelledby="legend-title">
           <div class="legend">
             <h2 id="legend-title">Legend: the modules, in the order a project uses them</h2>
             <ol class="modules">
-              <li><a href="https://spatialturn.github.io/Foundations/"><span class="num">1</span><span><b>Foundations</b>Python in Colab, tables, charts and a first QGIS map</span></a></li>
-              <li><a href="https://spatialturn.github.io/DataManagement/"><span class="num">2</span><span><b>Data Management</b>Data models, formats, coordinate systems and quality</span></a></li>
-              <li><a href="https://spatialturn.github.io/DataCollection/"><span class="num">3</span><span><b>Data Collection</b>Repositories, Census data, geocoding, imagery and fieldwork</span></a></li>
-              <li><a href="https://spatialturn.github.io/DataAnalysis/"><span class="num">4</span><span><b>Data Analysis</b>Networks, autocorrelation, clustering and NDVI</span></a></li>
-              <li><a href="https://spatialturn.github.io/DataVisualization/"><span class="num">5</span><span><b>Data Visualization</b>Charts, map design and accessible maps</span></a></li>
-              <li><a href="https://spatialturn.github.io/DataCuration/"><span class="num">6</span><span><b>Data Curation</b>Metadata, preservation, sharing and ethics</span></a></li>
-              <li><a href="https://spatialturn.github.io/CaseStudies/"><span class="num">7</span><span><b>Case Studies</b>Food deserts and grocery access, start to finish</span></a></li>
+              <li class="span"><a href="https://spatialturn.github.io/Foundations/" target="_blank" rel="noopener"><span class="num">1</span><span><b>Foundations <em>Start here</em></b>Python in Colab, tables, charts and a first QGIS map</span></a></li>
+              <li><a href="https://spatialturn.github.io/DataManagement/" target="_blank" rel="noopener"><span class="num">2</span><span><b>Data Management</b>Data models, formats, coordinate systems and quality</span></a></li>
+              <li><a href="https://spatialturn.github.io/DataCollection/" target="_blank" rel="noopener"><span class="num">3</span><span><b>Data Collection</b>Repositories, Census data, geocoding, imagery and fieldwork</span></a></li>
+              <li><a href="https://spatialturn.github.io/DataAnalysis/" target="_blank" rel="noopener"><span class="num">4</span><span><b>Data Analysis</b>Networks, autocorrelation, clustering and NDVI</span></a></li>
+              <li><a href="https://spatialturn.github.io/DataVisualization/" target="_blank" rel="noopener"><span class="num">5</span><span><b>Data Visualization</b>Charts, map design and accessible maps</span></a></li>
+              <li><a href="https://spatialturn.github.io/DataCuration/" target="_blank" rel="noopener"><span class="num">6</span><span><b>Data Curation</b>Metadata, preservation, sharing and ethics</span></a></li>
+              <li><a href="https://spatialturn.github.io/CaseStudies/" target="_blank" rel="noopener"><span class="num">7</span><span><b>Case Studies</b>Food deserts and grocery access, start to finish</span></a></li>
             </ol>
           </div>
 
           <aside class="title-block" aria-label="About this project">
             <p class="tb-title">Enabling the Geospatial Turn in the Social Sciences</p>
             <div class="logos">
-              <a class="logo-purdue" href="https://www.purdue.edu/" aria-label="Purdue University website">
+              <a class="logo-purdue" href="https://www.purdue.edu/" aria-label="Purdue University website" target="_blank" rel="noopener">
                 <img class="on-dark" src="assets/purdue-logo-dark-bg.svg" alt="Purdue University" width="168" height="30">
                 <img class="on-light" src="assets/purdue-logo-light-bg.svg" alt="Purdue University" width="168" height="30">
               </a>
-              <a class="logo-nsf" href="https://www.nsf.gov/" aria-label="U.S. National Science Foundation website">
+              <a class="logo-nsf" href="https://www.nsf.gov/" aria-label="U.S. National Science Foundation website" target="_blank" rel="noopener">
                 <img src="assets/nsf-logo.png" alt="U.S. National Science Foundation" width="56" height="56">
               </a>
             </div>
             <p>Supported by the U.S. National Science Foundation.</p>
-            <div class="scalebar" aria-hidden="true">
-              <svg id="scalebar" width="200" height="30" viewBox="0 0 200 30"></svg>
-            </div>
             <p class="small">Edition 2026. Contact: <a href="mailto:ilindsay@purdue.edu">ilindsay@purdue.edu</a></p>
           </aside>
         </section>

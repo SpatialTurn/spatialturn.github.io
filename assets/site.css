@@ -78,7 +78,7 @@ nav a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset
 .hero-map::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 15%; background: linear-gradient(90deg, var(--paper), transparent); pointer-events: none; }
 .hero-map img, .hero-map svg { display: block; width: 100%; height: 100%; object-fit: cover; }
 .hero-map svg { cursor: crosshair; }
-.hero-text { position: relative; z-index: 1; max-width: 540px; background: var(--panel); padding: 12px 24px 24px 0; box-shadow: 24px 0 24px -12px var(--panel); }
+.hero-text { position: relative; z-index: 1; max-width: 520px; background: var(--panel); padding: 12px 20px 24px 0; box-shadow: 14px 0 14px -6px var(--panel); }
 .kicker { margin: 0 0 14px; font-size: 15px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
 h1 { margin: 0 0 20px; font-weight: 600; font-size: clamp(46px, 6.4vw, 78px); line-height: .96; letter-spacing: -.005em; }
 .lede { margin: 0 0 28px; font-size: 19px; line-height: 1.55; max-width: 470px; }
@@ -88,7 +88,9 @@ h1 { margin: 0 0 20px; font-weight: 600; font-size: clamp(46px, 6.4vw, 78px); li
 .btn-solid:hover { background: transparent; color: var(--ink); }
 .btn-line { color: var(--ink); }
 .btn-line:hover { background: var(--accent); color: var(--accent-ink); }
-.map-caption { position: absolute; z-index: 1; right: 24px; bottom: 12px; margin: 0; font-size: 14px; color: var(--muted); background: var(--panel); padding: 2px 8px; max-width: 46ch; text-align: right; }
+.map-caption { position: absolute; z-index: 1; right: 24px; bottom: 14px; font-size: 14px; color: var(--muted); background: var(--panel); padding: 8px 12px 6px; max-width: 46ch; text-align: right; border: 1px solid color-mix(in srgb, var(--rule) 50%, transparent); }
+.map-caption p { margin: 6px 0 0; line-height: 1.35; }
+.map-caption .scalebar { display: flex; justify-content: flex-end; }
 
 /* map layers (units are meters on the ground) */
 .hm-water { fill: var(--water); fill-opacity: .55; stroke: var(--water); stroke-width: 10; }
@@ -110,8 +112,11 @@ h1 { margin: 0 0 20px; font-weight: 600; font-size: clamp(46px, 6.4vw, 78px); li
 .legend-row { position: relative; z-index: 2; display: flex; border-top: 1px solid var(--rule); background: var(--paper); }
 .legend { flex: 1 1 auto; padding: 22px 32px 28px; border-right: 1px solid var(--rule); }
 h2 { margin: 0 0 14px; font-weight: 600; font-size: 21px; }
-.modules { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(4, auto); grid-auto-flow: column; gap: 6px 20px; font-size: 15px; line-height: 1.35; }
-.modules a { display: flex; gap: 12px; padding: 8px 10px; color: var(--ink); text-decoration: none; border: 1px solid transparent; transition: border-color .15s, background-color .15s; height: 100%; }
+.modules { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto repeat(3, auto); grid-auto-flow: column; gap: 8px 20px; font-size: 15px; line-height: 1.35; }
+.modules .span { grid-column: 1 / -1; }
+.modules .span a { border-color: var(--rule); }
+.modules em { font-style: normal; font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-left: 10px; }
+.modules a { display: flex; gap: 12px; padding: 10px 12px; color: var(--ink); text-decoration: none; border: 1px solid color-mix(in srgb, var(--rule) 45%, transparent); transition: border-color .15s, background-color .15s; height: 100%; }
 .modules a:hover, .modules a:focus-visible { border-color: var(--accent); background: var(--hover); outline: none; }
 .modules a span:last-child { color: var(--muted); }
 .modules a:hover span:last-child, .modules a:focus-visible span:last-child { color: var(--ink); }
@@ -146,8 +151,10 @@ h2 { margin: 0 0 14px; font-weight: 600; font-size: 21px; }
   .hero { min-height: 0; padding-top: 40px; padding-bottom: 88px; }
   .hero-text { padding: 16px; box-shadow: none; }
   .modules { grid-template-columns: 1fr; grid-auto-flow: row; grid-template-rows: none; }
+  .hero { padding-bottom: 130px; }
   .collar-top span:last-child, #cursor-readout { display: none; }
   .map-caption { left: 18px; right: 18px; text-align: left; }
+  .map-caption .scalebar { justify-content: flex-start; }
   nav { gap: 14px; }
   .theme-label { display: none; }
 }
