@@ -24,7 +24,13 @@
     {
      "title": "Geospatial Python Basics",
      "url": "https://spatialturn.github.io/Foundations/geospatial-python.html",
-     "mins": 105,
+     "mins": 135,
+     "tag": "python"
+    },
+    {
+     "title": "Map Your County in Python",
+     "url": "https://spatialturn.github.io/Foundations/map-your-county-python.html",
+     "mins": 60,
      "tag": "python"
     },
     {
@@ -39,6 +45,18 @@
      "mins": 90,
      "tag": "qgis",
      "ws": "Workshop 1A"
+    },
+    {
+     "title": "Tables, Joins and Selections in QGIS",
+     "url": "https://spatialturn.github.io/Foundations/qgis-tables.html",
+     "mins": 80,
+     "tag": "qgis"
+    },
+    {
+     "title": "Map Your County in QGIS",
+     "url": "https://spatialturn.github.io/Foundations/map-your-county-qgis.html",
+     "mins": 60,
+     "tag": "qgis"
     }
    ]
   },
