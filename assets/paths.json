@@ -258,6 +258,18 @@
      "tag": "theory"
     },
     {
+     "title": "Cartography in Python",
+     "url": "https://spatialturn.github.io/DataVisualization/cartography-python.html",
+     "mins": 85,
+     "tag": "python"
+    },
+    {
+     "title": "Cartography in QGIS",
+     "url": "https://spatialturn.github.io/DataVisualization/cartography-qgis.html",
+     "mins": 90,
+     "tag": "qgis"
+    },
+    {
      "title": "Accessibility in Map Design",
      "url": "https://spatialturn.github.io/DataVisualization/accessibility.html",
      "mins": 90,
@@ -309,6 +321,18 @@
   {
    "repo": "CaseStudies",
    "episodes": [
+    {
+     "title": "Park Access in Lafayette (Python)",
+     "url": "https://spatialturn.github.io/CaseStudies/park-access-python.html",
+     "mins": 75,
+     "tag": "python"
+    },
+    {
+     "title": "Park Access in Lafayette (QGIS)",
+     "url": "https://spatialturn.github.io/CaseStudies/park-access-qgis.html",
+     "mins": 85,
+     "tag": "qgis"
+    },
     {
      "title": "Case Study: Food Deserts",
      "url": "https://spatialturn.github.io/CaseStudies/introduction.html",
