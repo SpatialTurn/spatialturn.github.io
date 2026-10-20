@@ -148,6 +148,18 @@
    "repo": "DataAnalysis",
    "episodes": [
     {
+     "title": "Geoprocessing in Python",
+     "url": "https://spatialturn.github.io/DataAnalysis/geoprocessing-python.html",
+     "mins": 90,
+     "tag": "python"
+    },
+    {
+     "title": "Geoprocessing in QGIS",
+     "url": "https://spatialturn.github.io/DataAnalysis/geoprocessing-qgis.html",
+     "mins": 95,
+     "tag": "qgis"
+    },
+    {
      "title": "Network Analysis",
      "url": "https://spatialturn.github.io/DataAnalysis/networkanalysis.html",
      "mins": 85,
