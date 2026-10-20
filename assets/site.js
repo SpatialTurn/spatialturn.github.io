@@ -130,7 +130,11 @@
 
 /* ---------- View by tool: All modules / Python path / QGIS path ----------
    Episode data comes from assets/paths.json (written by SpatialTurn_build_scripts/utils/homepage_paths.py).
-   The choice is kept in the address (#python, #qgis) so it can be shared, and remembered on this device only. */
+   In the Python and QGIS views a second switch lists the episodes by module or in a suggested order (numbered
+   stages from paths.json "order"); every episode shows a level badge (B, I, A). Module and stage tiles span the
+   full width in these views, with their episodes in two columns, so no tile is stretched to match another.
+   The choice is kept in the address (#python, #qgis, #python-suggested, #qgis-suggested) so it can be shared,
+   and remembered on this device only. */
 (function () {
   "use strict";
   var sw = document.querySelector(".tool-switch");
@@ -139,23 +143,45 @@
 
   var VIEWS = ["all", "python", "qgis"];
   var LABEL = { python: "Python", qgis: "QGIS", theory: "Theory", both: "Py + QGIS" };
+  var LEVEL = { B: "Beginner", I: "Intermediate", A: "Advanced" };
   var HERO = {
     all: { btn: "Start with Foundations", href: "https://spatialturn.github.io/Foundations/" },
     python: { btn: "Start with Python Basics", href: "https://spatialturn.github.io/Foundations/python-basics.html" },
     qgis: { btn: "Start with your first QGIS map", href: "https://spatialturn.github.io/Foundations/qgisintro.html" }
   };
   var LEDE = {
-    python: "The Python path: every episode with a notebook, plus the shared theory episodes, in the order a project uses them.",
+    python: "The Python path: every episode with a notebook, plus the shared theory episodes.",
     qgis: "The QGIS path: every desktop GIS exercise, including the Workshop 2026 Track A sessions, plus the shared theory episodes."
   };
   var title = document.getElementById("legend-title"), summary = document.getElementById("legend-summary");
   var key = document.querySelector(".tool-key"), lede = document.getElementById("lede"), start = document.getElementById("start-btn");
+  var osw = document.querySelector(".order-switch"), stages = document.querySelector(".stages");
   var orig = { title: title.textContent, lede: lede ? lede.textContent : "" };
-  var data = null;
+  var data = null, order = "module", current = "all", MODNAME = {};
 
   function fmt(m) { return m >= 60 ? Math.floor(m / 60) + " h" + (m % 60 ? " " + (m % 60) : "") : m + " min"; }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function inPath(e, view) { return view === "all" || e.tag === "theory" || e.tag === "both" || e.tag === view; }
+  function levels(eps) {
+    var seen = {}; eps.forEach(function (e) { if (e.level) seen[e.level] = 1; });
+    return "BIA".split("").filter(function (l) { return seen[l]; });
+  }
+
+  function epRow(e, withModule) {
+    var item = el("li", e.tag), a = el("a");
+    a.href = e.url; a.target = "_blank"; a.rel = "noopener";
+    a.appendChild(el("span", "lvl lvl-" + e.level, e.level));
+    var t = el("span", "ep-title", e.title);
+    if (e.ws) t.appendChild(el("span", "ws-tag", e.ws));
+    if (withModule) t.appendChild(el("span", "ep-mod", MODNAME[e.url]));
+    a.appendChild(t);
+    a.appendChild(el("span", "chip chip-" + e.tag, LABEL[e.tag]));
+    a.appendChild(el("span", "ep-mins", fmt(e.mins)));
+    a.setAttribute("aria-label", e.title + (e.ws ? ", " + e.ws : "") + (withModule ? ", " + MODNAME[e.url] : "") +
+      ", " + LEVEL[e.level] + ", " + LABEL[e.tag] + ", " + fmt(e.mins));
+    item.appendChild(a);
+    return item;
+  }
 
   function render(view) {
     var total = 0, mins = 0, shared = 0, all = 0;
@@ -164,17 +190,20 @@
       var desc = li.querySelector(".desc");
       if (!desc.hasAttribute("data-desc")) desc.setAttribute("data-desc", desc.textContent);
       var old = li.querySelectorAll(".chips, .eps"); for (var i = 0; i < old.length; i++) li.removeChild(old[i]);
-      var own = m.episodes.filter(function (e) { return !e.ws; });
-      all += own.length;
+      all += m.episodes.filter(function (e) { return !e.ws; }).length;
       if (view === "all") {
         desc.textContent = desc.getAttribute("data-desc");
-        var counts = {}, ws = 0;
-        m.episodes.forEach(function (e) { if (e.ws) ws++; else counts[e.tag] = (counts[e.tag] || 0) + 1; });
+        var counts = {};
+        m.episodes.forEach(function (e) { counts[e.tag] = (counts[e.tag] || 0) + 1; });   /* workshop episodes count as QGIS */
         var chips = el("div", "chips");
         [["python", "Python"], ["qgis", "QGIS"], ["both", "Python + QGIS"], ["theory", "Theory"]].forEach(function (t) {
           if (counts[t[0]]) chips.appendChild(el("span", "chip chip-" + t[0], counts[t[0]] + " " + t[1]));
         });
-        if (ws) chips.appendChild(el("span", "chip chip-ws", "+" + ws + " Workshop QGIS"));
+        var lv = levels(m.episodes), box = el("span", "lvls");
+        lv.forEach(function (l) { box.appendChild(el("span", "lvl lvl-" + l, l)); });
+        box.setAttribute("role", "img");
+        box.setAttribute("aria-label", "Levels: " + lv.map(function (l) { return LEVEL[l]; }).join(", "));
+        chips.appendChild(box);
         li.appendChild(chips);
         return;
       }
@@ -182,38 +211,40 @@
       var sum = eps.reduce(function (s, e) { return s + e.mins; }, 0);
       total += eps.length; mins += sum; shared += eps.filter(function (e) { return e.tag === "theory"; }).length;
       var theoryOnly = eps.every(function (e) { return e.tag === "theory"; });
-      if (theoryOnly) {
-        desc.textContent = "Theory for both paths · " + eps.length + " episodes · about " + fmt(sum);
-        return;
-      }
-      desc.textContent = eps.length + (eps.length === 1 ? " episode" : " episodes") + " · about " + fmt(sum);
+      desc.textContent = (theoryOnly ? "Theory for both paths · " : "") + eps.length +
+        (eps.length === 1 ? " episode" : " episodes") + " · about " + fmt(sum);
       var ul = el("ul", "eps");
-      eps.forEach(function (e) {
-        var item = el("li", e.tag), a = el("a");
-        a.href = e.url; a.target = "_blank"; a.rel = "noopener";
-        var t = el("span", "ep-title", e.title);
-        if (e.ws) t.appendChild(el("span", "ws-tag", e.ws));
-        a.appendChild(t);
-        a.appendChild(el("span", "chip chip-" + e.tag, LABEL[e.tag]));
-        a.appendChild(el("span", "ep-mins", fmt(e.mins)));
-        a.setAttribute("aria-label", e.title + (e.ws ? ", " + e.ws : "") + ", " + LABEL[e.tag] + ", " + fmt(e.mins));
-        item.appendChild(a); ul.appendChild(item);
-      });
+      eps.forEach(function (e) { ul.appendChild(epRow(e, false)); });
       li.appendChild(ul);
     });
 
-    arrange(view);
+    var sug = view !== "all" && order === "suggested" && data.order && data.order[view];
+    list.classList.toggle("path-view", view !== "all");
+    list.hidden = !!sug;
+    if (stages) { stages.hidden = !sug; if (sug) renderStages(view); }
+    if (osw) {
+      osw.hidden = view === "all";
+      var ob = osw.querySelectorAll("button");
+      for (var k = 0; k < ob.length; k++) {
+        var onk = ob[k].getAttribute("data-order") === order;
+        ob[k].setAttribute("aria-checked", onk ? "true" : "false"); ob[k].tabIndex = onk ? 0 : -1;
+      }
+    }
     if (view === "all") {
       title.textContent = orig.title;
       summary.textContent = data.modules.length + " modules · " + all + " episodes";
       if (lede) lede.textContent = orig.lede;
     } else {
-      title.textContent = (view === "python" ? "Python path" : "QGIS path") + ": episodes by module";
+      title.textContent = (view === "python" ? "Python path" : "QGIS path") + (sug ? ": suggested order" : ": episodes by module");
       summary.textContent = total + " episodes · about " + Math.round(mins / 60) + " hours · " + shared + " shared theory episodes";
       if (lede) lede.textContent = LEDE[view];
     }
-    key.hidden = view === "all";
-    var wsKey = key.querySelector(".key-ws"); if (wsKey) wsKey.hidden = view !== "qgis";
+    key.hidden = false;
+    var keys = key.querySelectorAll("li");
+    for (var z = 0; z < keys.length; z++) {
+      var c = keys[z].className;
+      keys[z].hidden = c === "key-lvl" ? false : (view === "all" || (c === "key-ws" && view !== "qgis"));
+    }
     if (start) { start.textContent = HERO[view].btn; start.href = HERO[view].href; }
     var bs = sw.querySelectorAll("button");
     for (var j = 0; j < bs.length; j++) {
@@ -223,65 +254,85 @@
     }
   }
 
-  /* Path views: two columns whose bottoms line up (QGIS: left 1, 4, 5, 6 and right 2, 3, 7; Python: Data
-     Visualization moves to the right, to balance the columns). All modules: the
-     original legend grid. On phones the columns dissolve and the tiles follow their numbers. */
-  var tiles = Array.prototype.slice.call(list.querySelectorAll("li[data-module]"));
-  tiles.forEach(function (li, i) { li.style.order = i + 1; });
-  var COLS = {
-    qgis: [["Foundations", "DataAnalysis", "DataVisualization", "DataCuration"],
-           ["DataManagement", "DataCollection", "CaseStudies"]],
-    python: [["Foundations", "DataAnalysis", "DataCuration"],
-             ["DataManagement", "DataCollection", "DataVisualization", "CaseStudies"]]
-  };
-  function arrange(view) {
-    var wraps = list.querySelectorAll(".pcol");
-    if (view === "all") {
-      tiles.forEach(function (li) { list.appendChild(li); });
-      for (var i = 0; i < wraps.length; i++) list.removeChild(wraps[i]);
-      list.classList.remove("path-view");
-      return;
-    }
-    if (!wraps.length) {
-      [0, 1].forEach(function () { var w = el("li", "pcol"); w.appendChild(el("ol", "pcol-list")); list.appendChild(w); });
-      wraps = list.querySelectorAll(".pcol");
-    }
-    COLS[view].forEach(function (names, c) {
-      var col = wraps[c].firstChild;
-      names.forEach(function (n) { var li = list.querySelector('[data-module="' + n + '"]'); if (li) col.appendChild(li); });
+  /* Suggested order: numbered stages, each a full-width tile listing its episodes with their module */
+  function renderStages(view) {
+    var byUrl = {};
+    data.modules.forEach(function (m) { m.episodes.forEach(function (e) { byUrl[e.url] = e; }); });
+    stages.textContent = "";
+    data.order[view].forEach(function (s, i) {
+      var eps = s.eps.map(function (u) { return byUrl[u]; }).filter(Boolean);
+      var sum = eps.reduce(function (a, e) { return a + e.mins; }, 0);
+      var li = el("li"), head = el("div", "tilehead"), txt = el("span");
+      head.appendChild(el("span", "num", String(i + 1)));
+      txt.appendChild(el("b", null, s.stage));
+      txt.appendChild(el("span", "desc", eps.length + (eps.length === 1 ? " episode" : " episodes") + " · about " + fmt(sum) +
+        " · " + levels(eps).map(function (l) { return LEVEL[l]; }).join(" to ")));
+      head.appendChild(txt); li.appendChild(head);
+      var ul = el("ul", "eps");
+      eps.forEach(function (e) { ul.appendChild(epRow(e, true)); });
+      li.appendChild(ul); stages.appendChild(li);
     });
-    list.classList.add("path-view");
   }
 
   function setView(view, push) {
+    current = view;
     render(view);
-    try { localStorage.setItem("st-view", view); } catch (e) {}
+    try { localStorage.setItem("st-view", view); localStorage.setItem("st-order", order); } catch (e) {}
     if (push && window.history && history.replaceState) {
-      history.replaceState(null, "", view === "all" ? location.pathname + location.search : "#" + view);
+      history.replaceState(null, "", view === "all" ? location.pathname + location.search :
+        "#" + view + (order === "suggested" ? "-suggested" : ""));
     }
   }
 
+  function fromHash() {
+    var h = location.hash.replace("#", "").split("-");
+    if (VIEWS.indexOf(h[0]) > 0) { order = h[1] === "suggested" ? "suggested" : "module"; return h[0]; }
+    return null;
+  }
+
   function initial() {
-    var h = location.hash.replace("#", "");
-    if (VIEWS.indexOf(h) > 0) return h;
-    try { var v = localStorage.getItem("st-view"); if (VIEWS.indexOf(v) >= 0) return v; } catch (e) {}
+    var h = fromHash(); if (h) return h;
+    try {
+      if (localStorage.getItem("st-order") === "suggested") order = "suggested";
+      var v = localStorage.getItem("st-view"); if (VIEWS.indexOf(v) >= 0) return v;
+    } catch (e) {}
     return "all";
+  }
+
+  function radioKeys(group, attr, onPick) {
+    group.addEventListener("keydown", function (e) {
+      if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].indexOf(e.key) < 0) return;
+      var bs = group.querySelectorAll("button"), cur = 0;
+      for (var i = 0; i < bs.length; i++) if (bs[i].getAttribute("aria-checked") === "true") cur = i;
+      var next = (cur + (e.key === "ArrowLeft" || e.key === "ArrowUp" ? bs.length - 1 : 1)) % bs.length;
+      onPick(bs[next].getAttribute(attr)); bs[next].focus(); e.preventDefault();
+    });
   }
 
   fetch("assets/paths.json").then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
     data = d;
+    var names = list.querySelectorAll("li[data-module]");
+    for (var q = 0; q < names.length; q++) {
+      var b = names[q].querySelector("b").cloneNode(true), x = b.querySelectorAll(".num, em");
+      for (var y = 0; y < x.length; y++) x[y].parentNode.removeChild(x[y]);
+      var repo = names[q].getAttribute("data-module"), nm = b.textContent.trim();
+      data.modules.forEach(function (m) {
+        if (m.repo === repo) m.episodes.forEach(function (e) { MODNAME[e.url] = e.ws ? "Workshop 2026" : nm; });
+      });
+    }
     sw.hidden = false;
     sw.addEventListener("click", function (e) {
       var b = e.target.closest("button[data-view]"); if (b) setView(b.getAttribute("data-view"), true);
     });
-    sw.addEventListener("keydown", function (e) {
-      if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].indexOf(e.key) < 0) return;
-      var bs = sw.querySelectorAll("button"), cur = 0;
-      for (var i = 0; i < bs.length; i++) if (bs[i].getAttribute("aria-checked") === "true") cur = i;
-      var next = (cur + (e.key === "ArrowLeft" || e.key === "ArrowUp" ? bs.length - 1 : 1)) % bs.length;
-      setView(bs[next].getAttribute("data-view"), true); bs[next].focus(); e.preventDefault();
-    });
-    window.addEventListener("hashchange", function () { var h = location.hash.replace("#", ""); if (VIEWS.indexOf(h) > 0) setView(h, false); });
+    radioKeys(sw, "data-view", function (v) { setView(v, true); });
+    if (osw) {
+      osw.addEventListener("click", function (e) {
+        var b = e.target.closest("button[data-order]"); if (!b) return;
+        order = b.getAttribute("data-order"); setView(current, true);
+      });
+      radioKeys(osw, "data-order", function (o) { order = o; setView(current, true); });
+    }
+    window.addEventListener("hashchange", function () { var h = fromHash(); if (h) setView(h, false); });
     setView(initial(), false);
   }).catch(function () { /* without the data file the page stays on the plain module legend */ });
 })();
