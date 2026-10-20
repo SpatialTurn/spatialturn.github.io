@@ -178,6 +178,18 @@
      "tag": "qgis"
     },
     {
+     "title": "Raster Analysis in Python",
+     "url": "https://spatialturn.github.io/DataAnalysis/raster-python.html",
+     "mins": 85,
+     "tag": "python"
+    },
+    {
+     "title": "Raster Analysis in QGIS",
+     "url": "https://spatialturn.github.io/DataAnalysis/raster-qgis.html",
+     "mins": 90,
+     "tag": "qgis"
+    },
+    {
      "title": "Network Analysis",
      "url": "https://spatialturn.github.io/DataAnalysis/networkanalysis.html",
      "mins": 85,
