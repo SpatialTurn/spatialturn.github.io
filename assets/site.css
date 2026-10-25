@@ -77,14 +77,15 @@ nav a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset
 :root[data-theme="dark"] .i-moon, :root[data-theme="light"] .i-sun { display: none; }
 
 /* ---- hero with map ---- */
-.hero { position: relative; min-height: 560px; display: flex; align-items: center; padding: 56px 32px 64px; }
+.hero { position: relative; min-height: 470px; display: flex; align-items: center; padding: 56px 32px 64px; }
 .hero-map { position: absolute; top: 0; bottom: 0; right: 0; width: 74%; }
 .hero-map::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 15%; background: linear-gradient(90deg, var(--paper), transparent); pointer-events: none; }
 .hero-map img, .hero-map svg { display: block; width: 100%; height: 100%; object-fit: cover; }
 .hero-map svg { cursor: crosshair; }
-.hero-text { position: relative; z-index: 1; max-width: 520px; background: var(--panel); padding: 12px 20px 24px 0; box-shadow: 14px 0 14px -6px var(--panel); }
+.hero-text { position: relative; z-index: 1; max-width: 600px; background: var(--panel); padding: 12px 20px 24px 0; box-shadow: 14px 0 14px -6px var(--panel); }
 .kicker { margin: 0 0 14px; font-size: 15px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
 h1 { margin: 0 0 20px; font-weight: 600; font-size: clamp(46px, 6.4vw, 78px); line-height: .96; letter-spacing: -.005em; }
+.hero h1 { font-size: clamp(40px, 4.6vw, 60px); }   /* homepage title on two lines (25 October 2026) */
 .lede { margin: 0 0 28px; font-size: 19px; line-height: 1.55; max-width: 470px; }
 .actions { display: flex; flex-wrap: wrap; gap: 14px; }
 .btn { font-size: 20px; font-weight: 600; letter-spacing: .02em; padding: 11px 22px; text-decoration: none; border: 2px solid var(--accent); transition: background-color .2s, color .2s; }
@@ -206,6 +207,7 @@ h2 { margin: 0 0 4px; font-weight: 600; font-size: 23px; }
   .tb-text { text-align: center; }
   .hero-map { width: 100%; opacity: .7; }
   .hero-map::after { display: none; }
+  .hero { padding-bottom: 110px; }   /* room for the map caption under the buttons */
 }
 @media (max-width: 640px) {
   .sheet { padding: 0 16px; }
